@@ -36,7 +36,7 @@
 				var lat = position.coords.latitude;
 				var lon = position.coords.longitude;
 				var units = 'metric';
-				var apiUrl = 'http://api.openweathermap.org/data/2.5/weather?lat=' +
+				var apiUrl = 'https://api.openweathermap.org/data/2.5/weather?lat=' +
 					lat + '&lon=' + lon + '&units=' + units + 
 					'&APPID=2a6756e781c723daf2ae3f1e9a8fb98b';
 				var request = new Request(apiUrl);
