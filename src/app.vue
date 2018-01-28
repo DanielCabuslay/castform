@@ -2,21 +2,25 @@
   <main>
     <header>
       <section>
+        <i id="icon" class="fas fa-tint header_icon"></i>
         <h1>Castform</h1>
       </section>
       <section>
         <form @submit.prevent="sendQuery">
           <input id="search" v-model="input" type="text"
-          placeholder="Search for city" autocomplete="off">   
+          placeholder="Search for city" autocomplete="off">
         </form>
       </section>
       <section>
         <nav>
-          <a @click="promptGPS">
-            <i class="fas fa-map-marker fa-fw header_menu"></i>
+          <a>
+            <i id="loading_spinner" class="fas fa-spinner header_icon"></i>
+          </a>
+          <a @click="promptForGPS(false)">
+            <i class="fas fa-map-marker fa-fw header_icon"></i>
           </a>
           <a>
-            <i class="fas fa-cog fa-fw header_menu"></i>
+            <i class="fas fa-cog fa-fw header_icon"></i>
           </a>
         </nav>
       </section>
@@ -43,11 +47,12 @@
       'main-app': Main
     },
     created: function() {
-      this.promptGPS();
+      this.promptForGPS(true);
     },
     methods: {
       sendQuery: function() {
         this.query = this.input;
+        document.getElementById('loading_spinner').style.opacity = 1;
       },
       sendPosition: function(pos) {
         this.position = pos;
@@ -56,11 +61,14 @@
         //placeholder until setting is configured
         this.query = 'Toronto';
       },
-      promptGPS: function() {
+      promptForGPS: function(initialLoad) {
         if (navigator.geolocation) {
           navigator.geolocation.getCurrentPosition(this.sendPosition, this.sendDefaultLocation);
         } else {
           this.sendDefaultLocation();
+        }
+        if (!initialLoad) {
+          document.getElementById('loading_spinner').style.opacity = 1;
         }
       },
     }
@@ -123,11 +131,12 @@
     margin-right: 1rem;
   }
   header h1 {
-    margin: auto 0;
+    margin: auto 0 auto 0.5em;
   }
   header nav a {
     margin: 0.5em;
     transition: 0.25s color;
+    cursor: pointer;
   }
   header nav a:first-child {
     margin-left: 0;
@@ -141,7 +150,7 @@
   form {
     margin: auto 0;
   }
-  input {
+  #search {
     background: var(--search-background-day);
     transition: background 1s;
     border: none;
@@ -152,13 +161,29 @@
     font-size: 1rem;
     width: 15em;
   }
-  input::placeholder {
+  #search::placeholder {
     color: rgba(255, 255, 255, 0.33);
   }
-  .header_menu {
+  #icon {
+    color: #b7eaff;
+    background-color: #0066db;
+    width: 1.5rem;
+    padding: 0.5rem;
+    border-radius: 50%;
+  }
+  .header_icon {
     font-size: 1.5em;
     filter: drop-shadow(0px 1px 2px var(--shadow));
-    cursor: pointer;
+  }
+  #loading_spinner {
+    opacity: 1;
+    margin-left: 0.5rem;
+    animation-name: loading;
+    animation-duration: 1s;
+    animation-iteration-count: infinite;
+    animation-timing-function: steps(8);
+    cursor: initial;
+    transition: opacity 0.1s;
   }
   #watermark_text {
     position: fixed;
@@ -171,13 +196,23 @@
     text-decoration: none;
     color: inherit;
   }
+  @keyframes loading {
+    0% { transform: rotate(0); }
+    100% { transform: rotate(360deg); }
+  }
   @media (max-width: 480px) {
     header section:first-child {
+      flex: 0;
+      margin-right: 1rem;
+    }
+    header section h1 {
       display: none;
-      text-align: left;
     }
     header section:nth-of-type(2) {
-      margin-left: 1rem;
+      text-align: left;
+    }
+    #search {
+      width: 10em;
     }
   }
 </style>

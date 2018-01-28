@@ -61,6 +61,7 @@
 						setTimeout(function() {
 		      		toast.classList.remove('toast_slide');
 						}, 3000)
+        		document.getElementById('loading_spinner').style.opacity = 0;
             throw new Error('Status returned by server: ' + response.status);
           }
         })
@@ -68,6 +69,7 @@
           this.displayWeather(response);
           this.changeBackground(response);
         }); 
+        document.getElementById('loading_spinner').style.opacity = 0;
       },
 			displayWeather: function(response) {
 				this.city = response['name'] + ', ' + response['sys']['country'];
