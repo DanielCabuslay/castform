@@ -1,27 +1,31 @@
 <template>
-	<aside>
+	<aside id="error_dialog">
 		<div class="dialog">
-			<h2>{{ header }}</h2>
+			<!-- <h2>{{ header }}</h2> -->
 			<div class="dialog_message">{{ message }}</div>
-			<div><!--button row--></div>
+			<div class="dialog_action">
+				<button @click="closeDialog">OK</button>
+			</div>
 		</div>
 	</aside>
 </template>
 
 <script>
 	export default {
+		props: ['message'],
 		data() {
 			return {
-				header: 'Title',
-				message: 'Message'
+			}
+		},
+		watch: {
+			errorMessage: function() {
+				this.message = message;
 			}
 		},
 		methods: {
-			setTitle: function(title) {
-				this.title = title;
-			},
-			setMessage: function(message) {
-				this.message = message;
+			closeDialog: function() {
+				document.getElementById('error_dialog').style.opacity = '0';
+				document.getElementById('error_dialog').style.visibility = 'hidden';
 			}
 		}
 	}
@@ -30,20 +34,21 @@
 <style>
 	aside {
 		position: absolute;
-		height: 100vh;
-		width: 100vw;
 		display: flex;
-		background-color: rgba(0, 0, 0, 0.4);
 		transition: opacity 0.25s;
+		top: 56px;
+		right: 1rem;
+	}
+	#error_dialog {
+		visibility: hidden;
+		opacity: 0;
 	}
 	.dialog {
-		margin: auto;
 		text-align: center;
-		max-width: 400px;
-		min-width: 200px;
 		background-color: rgba(255, 255, 255, 0.9);
 		display: grid;
-		border-radius: 4px;
+		grid-template-columns: 1fr auto;
+		border-radius: 2px;
 		box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.2);
 	}
 	.dialog h2, .dialog_message {
@@ -54,7 +59,17 @@
 		margin-bottom: 0.5rem;
 		text-transform: capitalize;
 	}
-	.dialog_message {
-		margin: 1rem;
+	.dialog_message, .dialog_action button {
+		margin: 0.5rem;
+		text-shadow: none;
+    font-size: 1em;
+	}
+	.dialog_action button {
+		color: #0066DB;
+    border: none;
+    background: transparent;
+    font-family: inherit;
+    cursor: pointer;
+    vertical-align: text-top;
 	}
 </style>
