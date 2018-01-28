@@ -3,13 +3,13 @@
     <header>
       <section>
         <i id="icon" class="fas fa-tint header_icon"></i>
-        <h1>Castform</h1>
-      </section>
-      <section>
         <form @submit.prevent="sendQuery">
           <input id="search" v-model="input" type="text"
-          placeholder="Search for city" autocomplete="off">
+          placeholder="Search for a city" autocomplete="off">
         </form>
+        <a id="search_icon" @click="sendQuery">
+          <i class="fas fa-search header_icon"></i>
+        </a>
       </section>
       <section>
         <nav>
@@ -130,22 +130,19 @@
     justify-content: flex-end;
     margin-right: 1rem;
   }
-  header h1 {
-    margin: auto 0 auto 0.5em;
-  }
-  header nav a {
+  header a {
     margin: 0.5em;
     transition: 0.25s color;
     cursor: pointer;
+  }
+  header a:hover {
+    color: white;
   }
   header nav a:first-child {
     margin-left: 0;
   }
   header nav a:last-child {
     margin-right: 0;
-  }
-  header nav a:hover {
-    color: white;
   }
   form {
     margin: auto 0;
@@ -155,14 +152,17 @@
     transition: background 1s;
     border: none;
     border-radius: 2px;
-    padding: 4px;
+    padding: 8px;
     color: white;
     font-family: 'Open Sans', sans-serif;
     font-size: 1rem;
-    width: 15em;
+    width: 10em;
   }
   #search::placeholder {
     color: rgba(255, 255, 255, 0.33);
+  }
+  #search_icon {
+    margin: auto 1em;
   }
   #icon {
     color: #b7eaff;
@@ -170,6 +170,7 @@
     width: 1.5rem;
     padding: 0.5rem;
     border-radius: 50%;
+    margin-right: 0.5em;
   }
   .header_icon {
     font-size: 1.5em;
@@ -203,16 +204,9 @@
   @media (max-width: 480px) {
     header section:first-child {
       flex: 0;
-      margin-right: 1rem;
     }
-    header section h1 {
+    #search_icon {
       display: none;
-    }
-    header section:nth-of-type(2) {
-      text-align: left;
-    }
-    #search {
-      width: 10em;
     }
   }
 </style>
