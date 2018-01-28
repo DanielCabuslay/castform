@@ -2,10 +2,11 @@ import Vue from 'vue';
 import App from './app.vue';
 import Main from './components/main.vue';
 import Header from './components/header.vue';
+import Current from './components/current_forecast.vue';
 
 Vue.component('main-app', Main);
 Vue.component('app-header', Header);
-const apiKey = '2a6756e781c723daf2ae3f1e9a8fb98b';
+Vue.component('current-forecast', Current);
 
 new Vue({
   el: '#app',

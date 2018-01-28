@@ -5,21 +5,17 @@
 </template>
 
 <script>
-	import Current from './current_forecast.vue';
 	export default {
 		data() {
 			return {
 
 			}
-		},
-		components: {
-			'current-forecast': Current
 		}
 	}
 </script>
 
 <style>
 	#main_app {
-		margin: 0 1rem;
+		margin: 4rem 2rem 0;
 	}
 </style>

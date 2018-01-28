@@ -1,25 +1,22 @@
 <template>
-	<form @submit.prevent="fetchLocationSuggestions">
-		<input v-model="query" type="text">		
+	<form @submit.prevent="sendQuery">
+		<input id="search" v-model="query" type="text">		
 	</form>
 </template>
 
 <script>
 	export default {
-		props: ['city'],
 		data () {
 			return {
 				query: ''
 			}
 		},
 		methods: {
-			fetchLocationSuggestions() {
-				alert(this.query);
+			sendQuery: function() {
+				console.log(this.query);
 			}
 		}
 	}
-// For city search:
-// api.openweathermap.org/data/2.5/weather?q={city name}&APPID={APIKEY}
 </script>
 
 <style>
@@ -27,7 +24,8 @@
 		margin: auto 0;
 	}
 	input {
-		background: rgba(0, 0, 0, 0.1);
+		background: var(--search-background-day);
+  	transition: background 1s;
 		border: none;
 		border-radius: 4px;
 		padding: 4px;
@@ -35,3 +33,10 @@
 		font-family: 'Open Sans', sans-serif;
 	}
 </style>
+
+<!--
+	For city search:
+	api.openweathermap.org/data/2.5/weather?q={city name}&APPID={APIKEY}
+	For GPS search:
+	api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&APPID={APIKEY}
+-->

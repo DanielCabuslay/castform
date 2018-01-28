@@ -7,38 +7,52 @@
 				<span>Low: {{ low }}</span>
 			</div>
 			<div id="current_temp">{{ temp }}<sup>&deg;C</sup></div>
+			<div id="weather_description">{{ description }}</div>
 		</div>
 		<div id="weather">
-			<div id="weather_icon"></div>
-			<div id="weather_description">{{ description }}</div>
 		</div>
 	</div>
 </template>
 
 <script>
 	export default {
+		props: ['query'],
 		data () {
 			return {
-				city: '',
-				temp: '',
+				city: 'Fetching location...',
+				temp: '--',
 				high: '',
 				low: '',
-				description: ''
+				description: '',
+				img: '',
+				apiKey: '2a6756e781c723daf2ae3f1e9a8fb98b'
 			}
 		},
 		created: function() {
-			if (navigator.geolocation) {
-		    navigator.geolocation.getCurrentPosition(this.fetchGPSWeather);
-		  }			
+			this.promptGPS();
 		},
 		methods: {
-			fetchGPSWeather: function(position) {
+			promptGPS: function() {
+				if (navigator.geolocation) {
+			    navigator.geolocation.getCurrentPosition(this.prepareGPSApiCall);
+			  }
+			},
+			prepareGPSApiCall: function(position) {
 				var lat = position.coords.latitude;
 				var lon = position.coords.longitude;
 				var units = 'metric';
 				var apiUrl = 'https://api.openweathermap.org/data/2.5/weather?lat=' +
-					lat + '&lon=' + lon + '&units=' + units + 
-					'&APPID=2a6756e781c723daf2ae3f1e9a8fb98b';
+					lat + '&lon=' + lon + '&units=' + units + '&APPID=' + this.apiKey;
+				this.fetchWeather(apiUrl);
+			},
+			prepareQueryApiCall: function(query) {
+				var q = this.query;
+				var units = 'metric';
+				var apiUrl = 'https://api.openweathermap.org/data/2.5/weather?q=' +
+				this.query + '&units=' + units + '&APPID=' + this.apiKey;
+				this.fetchWeather(apiUrl);				
+			},
+			fetchWeather: function(apiUrl) {
 				var request = new Request(apiUrl);
 				fetch(request).then(response => {
 					if (response.status === 200) {
@@ -49,14 +63,50 @@
 				})
 				.then(response => {
 					this.displayWeather(response);
-				});
+					this.changeBackground(response);
+				});	
 			},
 			displayWeather: function(response) {
-				this.city = response['name'];
+				this.city = response['name'] + ', ' + response['sys']['country'];
 				this.temp = Math.trunc(response['main']['temp']);
 				this.high = response['main']['temp_max'];
 				this.low = response['main']['temp_min'];
 				this.description = response['weather'][0]['description'];
+			},
+			changeBackground: function(response) {
+				var icon = response['weather'][0]['icon'].split('.')[0];
+				console.log(icon);
+				// if (icon.charAt(icon.length - 1) == 'n') {
+				// 	document.getElementById('search').style.background = 'var(--search-background-night)';
+				// }
+				//day
+				if (icon == '01d') {
+					document.body.style.backgroundColor = 'var(--weather-clear-day)';
+				} else if (icon == '02d') {
+					document.body.style.backgroundColor = 'var(--weather-mixed-day)';
+				} else if (icon == '03d' || icon == '04d') {
+					document.body.style.backgroundColor = 'var(--weather-overcast-day)';
+				} else if (icon == '09d' || icon == '10d') {
+					document.body.style.backgroundColor = 'var(--weather-rain-day)';
+				} else if (icon == '22d') {
+					document.body.style.backgroundColor = 'var(--weather-thunderstorm-day)';
+				} else if (icon == '13d' || icon == '50d') {
+					document.body.style.backgroundColor = 'var(--weather-snow-day)';
+				} 
+				//night
+				else if (icon == '01n') {
+					document.body.style.backgroundColor = 'var(--weather-clear-night)';
+				} else if (icon == '02n') {
+					document.body.style.backgroundColor = 'var(--weather-clear-night)';
+				} else if (icon == '03n' || icon == '04n') {
+					document.body.style.backgroundColor = 'var(--weather-overcast-night)';
+				} else if (icon == '09n' || icon == '10n') {
+					document.body.style.backgroundColor = 'var(--weather-overcast-night)';
+				} else if (icon == '22n') {
+					document.body.style.backgroundColor = 'var(--weather-overcast-night)';
+				} else if (icon == '13n' || icon == '50n') {
+					document.body.style.backgroundColor = 'var(--weather-overcast-night)';
+				}
 			}
 		}
 	}
@@ -77,6 +127,9 @@
 		grid-column: 1 / -1;
 		font-size: 2rem;
 	}
+	#high_and_low {
+		margin: auto auto 0 0;
+	}
 	#temp {		
 		display: grid;
 		grid-template-rows: 1fr 4fr;
@@ -96,8 +149,6 @@
 	#weather_description {
 		font-size: 1.5rem;
 		text-transform: capitalize;
-		text-align: center;
-		display: flex;
-		margin: auto;
 	}
+	/*weather shapes*/
 </style>
