@@ -68,8 +68,8 @@
         .then(response => {
           this.displayWeather(response);
           this.changeBackground(response);
+        	document.getElementById('loading_spinner').style.opacity = 0;
         }); 
-        document.getElementById('loading_spinner').style.opacity = 0;
       },
 			displayWeather: function(response) {
 				this.city = response['name'] + ', ' + response['sys']['country'];
