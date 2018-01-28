@@ -3,10 +3,8 @@
 		<section>
 			<h1>Castform</h1>
 		</section>
-		<!-- <section>
-			<app-search></app-search>
-		</section> -->
 		<section>
+			<app-search></app-search>
 		</section>
 	</header>
 </template>
@@ -40,11 +38,11 @@
 	}
 	header section:first-child {
 		justify-content: flex-start;
-		margin-left: 2rem;
+		margin-left: 1rem;
 	}
 	header section:last-child {
 		justify-content: flex-end;
-		margin-right: 2rem;
+		margin-right: 1rem;
 	}
 	header h1 {
 		margin: auto 0;

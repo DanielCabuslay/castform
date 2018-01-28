@@ -3,14 +3,16 @@
 		<div id="city">{{ city }}</div>
 		<div id="temp">
 			<div id="high_and_low">
-				<span>High: {{ high }}</span>
-				<span>Low: {{ low }}</span>
+				<span>High: {{ high }}&deg;C</span> - <span>Low: {{ low }}&deg;C</span>
 			</div>
-			<div id="current_temp">{{ temp }}<sup>&deg;C</sup></div>
-			<div id="weather_description">{{ description }}</div>
+			<div id="current_temp">
+				{{ temp }}<sup>&deg;C</sup>
+			</div>
+			<div id="weather_description">
+				{{ description }}
+			</div>
 		</div>
-		<div id="weather">
-		</div>
+		<!-- <div id="weather"></div> -->
 	</div>
 </template>
 
@@ -75,10 +77,9 @@
 			},
 			changeBackground: function(response) {
 				var icon = response['weather'][0]['icon'].split('.')[0];
-				console.log(icon);
-				// if (icon.charAt(icon.length - 1) == 'n') {
-				// 	document.getElementById('search').style.background = 'var(--search-background-night)';
-				// }
+				if (icon.charAt(icon.length - 1) == 'n') {
+					document.getElementById('search').style.background = 'var(--search-background-night)';
+				}
 				//day
 				if (icon == '01d') {
 					document.body.style.backgroundColor = 'var(--weather-clear-day)';
@@ -113,10 +114,6 @@
 </script>
 
 <style>
-	.current_forecast {
-		display: grid;
-		grid-template-columns: repeat(2, 1fr);
-	}
 	#city, #current_temp {
 	  font-family: 'Montserrat', sans-serif;
 	  font-weight: 600;
@@ -124,28 +121,23 @@
 	  color: white;
 	}
 	#city {
-		grid-column: 1 / -1;
 		font-size: 2rem;
 	}
 	#high_and_low {
-		margin: auto auto 0 0;
-	}
-	#temp {		
-		display: grid;
-		grid-template-rows: 1fr 4fr;
+		margin-top: 1rem;
 	}
 	#current_temp {
 		font-size: 10rem;
-		margin: 0;
+		margin: -0.5rem 0;
 	}
 	#current_temp sup {
 		font-size: 5rem;
 		font-weight: 400;
 	}
-	#weather {
+/*	#weather {
 		display: grid;
 		grid-template-rows: 4fr 1fr;
-	}
+	}*/
 	#weather_description {
 		font-size: 1.5rem;
 		text-transform: capitalize;

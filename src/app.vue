@@ -1,7 +1,11 @@
 <template>
   <main>
+    <app-dialog id="location_dialog"></app-dialog>
     <app-header></app-header>
     <main-app></main-app>
+    <div id="watermark_text">
+      Weather provided by <a target="_blank" ref="noopener noreferrer" href="https://openweathermap.org/">OpenWeatherMap</a>
+    </div>
   </main>
 </template>
 
@@ -36,11 +40,27 @@ body {
 }
 main {
   font-family: 'Open Sans', sans-serif;
+  position: relative;
 }
 h1, h2 {
   font-family: 'Montserrat', sans-serif;
   font-weight: 600;
   text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
   color: white;
+}
+#location_dialog {
+  opacity: 0;
+  visibility: hidden;
+}
+#watermark_text {
+  position: fixed;
+  bottom: 0.5rem;
+  right: 1rem;
+  color: rgba(255, 255, 255, 0.33);
+  font-size: 0.75rem;
+}
+#watermark_text a {
+  text-decoration: none;
+  color: inherit;
 }
 </style>

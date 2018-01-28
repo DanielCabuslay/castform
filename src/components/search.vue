@@ -31,6 +31,7 @@
 		padding: 4px;
 		color: white;
 		font-family: 'Open Sans', sans-serif;
+		font-size: 1rem;
 	}
 </style>
 

@@ -17,5 +17,6 @@
 <style>
 	#main_app {
 		margin: 4rem 2rem 0;
+		text-align: center;
 	}
 </style>
