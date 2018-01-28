@@ -1,16 +1,16 @@
 <template>
   <div id="main_app">
-    <error-dialog :message="errorMessage"></error-dialog>
+    <toast id="toast" class="toast" :message="toastMessage"></toast>
     <current-forecast :city="city" :temp="temp" :high="high" :low="low" :description="description"></current-forecast>
   </div>
 </template>
 
 <script>
 	import Current from './current_forecast.vue';
-  import Dialog from './dialog.vue';
+  import Toast from './toast.vue';
 
 	export default {
-		props: ['query'],
+		props: ['query', 'position'],
 		data() {
 			return {
         city: 'Fetching location...',
@@ -18,32 +18,23 @@
         high: '--',
         low: '--',
         description: 'Fetching weather...',
-        errorMessage: '',
+        toastMessage: '',
         apiKey: '2a6756e781c723daf2ae3f1e9a8fb98b'
 			}
 		},
 		components: {
     	'current-forecast': Current,
-    	'error-dialog': Dialog
+    	'toast': Toast
 		},
 		watch: {
 			query: function() {
 				this.prepareQueryApiCall(this.query);
+			},
+			position: function() {
+				this.prepareGPSApiCall(this.position);
 			}
 		},
-		created: function() {
-			this.promptGPS();
-		},
   	methods: {
-  		resetData: function(query) {
-  		},
-      promptGPS: function() {
-        if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(this.prepareGPSApiCall, this.prepareQueryApiCall('Toronto'));
-        } else {
-        	this.prepareQueryApiCall('Toronto');
-        }
-      },
       prepareGPSApiCall: function(position) {
         var lat = position.coords.latitude;
         var lon = position.coords.longitude;
@@ -64,10 +55,13 @@
           if (response.status === 200) {
             return response.json();
           } else {
-          	this.errorMessage = 'Unable to find ' + this.query;
-						document.getElementById('error_dialog').style.visibility = 'visible';
-						document.getElementById('error_dialog').style.opacity = '1';
-            throw new Error('Something went wrong on api server!');
+          	this.toastMessage = 'Unable to find ' + this.query;
+		      	var toast = document.getElementById('toast');
+						toast.classList.add('toast_slide');
+						setTimeout(function() {
+		      		toast.classList.remove('toast_slide');
+						}, 3000)
+            throw new Error('Status returned by server: ' + response.status);
           }
         })
         .then(response => {
@@ -124,5 +118,21 @@
 	#main_app {
 		margin: 4rem 2rem 0;
 		text-align: center;
+	}
+	.toast {
+		visibility: hidden;
+		opacity: 0;
+		bottom: 2rem;
+		right: 2rem;
+	}
+	.toast_slide {
+		animation-name: toast_slide;
+		animation-duration: 3s; 
+	}
+	@keyframes toast_slide {
+		0% {visibility: hidden; opacity: 0; bottom: 0rem;}
+		20% {visibility: visible; opacity: 1; bottom: 2rem;}
+		90% {visibility: visible; opacity: 1; bottom: 2rem;}
+		100% {visibility: hidden; opacity: 0; bottom: 0rem;}
 	}
 </style>
