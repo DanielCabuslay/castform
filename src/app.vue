@@ -1,5 +1,6 @@
 <template>
   <main>
+    <settings-dialog id="settings_dialog"></settings-dialog>
     <header>
       <section>
         <i id="icon" class="fas fa-tint header_icon"></i>
@@ -19,13 +20,13 @@
           <a @click="promptForGPS(false)">
             <i class="fas fa-map-marker fa-fw header_icon"></i>
           </a>
-          <a>
+          <a @click="openSettings">
             <i class="fas fa-cog fa-fw header_icon"></i>
           </a>
         </nav>
       </section>
     </header>
-    <main-app :query="query" :position="position"></main-app>
+    <main-app :query="query" :position="position" :farenheit="farenheit"></main-app>
     <div id="watermark_text">
       Weather data provided by <a target="_blank" ref="noopener noreferrer" href="https://openweathermap.org/">OpenWeatherMap</a>
     </div>
@@ -34,32 +35,44 @@
 
 <script>
   import Main from './components/main.vue';
+  import Dialog from './components/dialog.vue';
 
   export default {
     data () {
       return {
         input: '',
         query: '',
+        farenheit: '',
         position: ''
       }
     },
     components: {
-      'main-app': Main
+      'main-app': Main,
+      'settings-dialog': Dialog
     },
     created: function() {
+      if (!window.localStorage || !localStorage.getItem('castform-visited')) {
+        localStorage.setItem('castform-visited', 'true');
+        localStorage.setItem('castform-default-location', 'Toronto');
+        localStorage.setItem('castform-farenheit', 'false');
+      }
       this.promptForGPS(true);
+      this.farenheit = localStorage.getItem('castform-farenheit');
     },
     methods: {
       sendQuery: function() {
         this.query = this.input;
         document.getElementById('loading_spinner').style.opacity = 1;
+        this.farenheit = localStorage.getItem('castform-farenheit');
       },
       sendPosition: function(pos) {
         this.position = pos;
+        this.farenheit = localStorage.getItem('castform-farenheit');
       },
       sendDefaultLocation: function() {
         //placeholder until setting is configured
-        this.query = 'Toronto';
+        this.query = localStorage.getItem('castform-default-location');
+        this.farenheit = localStorage.getItem('castform-farenheit');
       },
       promptForGPS: function(initialLoad) {
         if (navigator.geolocation) {
@@ -71,6 +84,15 @@
           document.getElementById('loading_spinner').style.opacity = 1;
         }
       },
+      openSettings: function() {
+        document.getElementById('settings_dialog').classList.add('dialog_open');
+        if (localStorage.getItem('castform-farenheit') == 'true') {
+          document.getElementById('farenheit_setting').checked = true;
+        } else {
+          document.getElementById('farenheit_setting').checked = false;
+        }
+        this.farenheit = localStorage.getItem('castform-farenheit');
+      }
     }
   }
 </script>
@@ -176,6 +198,9 @@
     font-size: 1.5em;
     filter: drop-shadow(0px 1px 2px var(--shadow));
   }
+  .header_icon:active {
+    color: rgba(255, 255, 255, 0.5);
+  }
   #loading_spinner {
     opacity: 1;
     margin-left: 0.5rem;
@@ -183,8 +208,11 @@
     animation-duration: 1s;
     animation-iteration-count: infinite;
     animation-timing-function: steps(8);
-    cursor: initial;
+    cursor: default;
     transition: opacity 0.1s;
+  }
+  #loading_spinner:active, #loading_spinner:hover {
+    color: rgba(255, 255, 255, 0.9);
   }
   #watermark_text {
     position: fixed;

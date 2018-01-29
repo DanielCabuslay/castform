@@ -3,10 +3,10 @@
 		<div id="city">{{ city }}</div>
 		<div id="temp">
 			<div id="high_and_low">
-				<span>High: {{ high }}&deg;C</span> - <span>Low: {{ low }}&deg;C</span>
+				<span>High: {{ high }}&deg;{{ units }}</span> - <span>Low: {{ low }}&deg;{{ units }}</span>
 			</div>
 			<div id="current_temp">
-				{{ temp }}<sup>&deg;C</sup>
+				{{ temp }}<sup>&deg;{{ units }}</sup>
 			</div>
 			<div id="weather_description">
 				{{ description }}
@@ -17,12 +17,10 @@
 
 <script>
 	export default {
-		props: ['city', 'temp', 'high', 'low', 'description'],
+		props: ['city', 'temp', 'high', 'low', 'description', 'units'],
 		data () {
 			return {
 			}
-		},
-		methods: {
 		}
 	}
 </script>

@@ -1,7 +1,7 @@
 <template>
   <div id="main_app">
     <toast id="toast" class="toast" :message="toastMessage"></toast>
-    <current-forecast :city="city" :temp="temp" :high="high" :low="low" :description="description"></current-forecast>
+    <current-forecast :city="city" :temp="temp" :high="high" :low="low" :description="description" :units="units"></current-forecast>
   </div>
 </template>
 
@@ -10,17 +10,21 @@
   import Toast from './toast.vue';
 
 	export default {
-		props: ['query', 'position'],
+		props: ['query', 'position', 'farenheit'],
 		data() {
 			return {
         city: 'Fetching location...',
         temp: '--',
+        units: '',
         high: '--',
         low: '--',
         description: 'Fetching weather...',
         toastMessage: '',
         apiKey: '2a6756e781c723daf2ae3f1e9a8fb98b'
 			}
+		},
+		created: function() {
+			this.checkFarenheit();
 		},
 		components: {
     	'current-forecast': Current,
@@ -32,21 +36,39 @@
 			},
 			position: function() {
 				this.prepareGPSApiCall(this.position);
+			},
+			farenheit: function() {
+				this.checkFarenheit();
 			}
 		},
   	methods: {
+  		checkFarenheit: function() {
+				if (this.farenheit == 'true') {
+					console.log('farenheit');
+					this.units = 'F';
+				} else {
+					console.log('celsius');
+					this.units = 'C';
+				}
+  		},
       prepareGPSApiCall: function(position) {
         var lat = position.coords.latitude;
-        var lon = position.coords.longitude;
-        var units = 'metric';
+        var lon = position.coords.longitude;  
+        var unit = 'metric';
+      	if (localStorage.getItem('castform-farenheit') == 'true') {
+        	var unit = 'imperial';
+        }
         var apiUrl = 'https://api.openweathermap.org/data/2.5/weather?lat=' +
-          lat + '&lon=' + lon + '&units=' + units + '&APPID=' + this.apiKey;
+          lat + '&lon=' + lon + '&units=' + unit + '&APPID=' + this.apiKey;
         this.fetchWeather(apiUrl);
       },
       prepareQueryApiCall: function(query) {
-        var units = 'metric';
+        var unit = 'metric';
+      	if (localStorage.getItem('castform-farenheit') == 'true') {
+        	var unit = 'imperial';
+        }
         var apiUrl = 'https://api.openweathermap.org/data/2.5/weather?q=' +
-        query + '&units=' + units + '&APPID=' + this.apiKey;
+        query + '&units=' + unit + '&APPID=' + this.apiKey;
         this.fetchWeather(apiUrl);
       },
       fetchWeather: function(apiUrl) {
@@ -74,8 +96,8 @@
 			displayWeather: function(response) {
 				this.city = response['name'] + ', ' + response['sys']['country'];
 				this.temp = Math.trunc(response['main']['temp']);
-				this.high = response['main']['temp_max'];
-				this.low = response['main']['temp_min'];
+				this.high = Math.trunc(response['main']['temp_max']);
+				this.low = Math.trunc(response['main']['temp_min']);
 				this.description = response['weather'][0]['description'];
 			},
 			changeBackground: function(response) {
