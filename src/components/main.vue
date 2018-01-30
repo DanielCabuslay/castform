@@ -10,7 +10,7 @@
   import Toast from './toast.vue';
 
 	export default {
-		props: ['query', 'position', 'farenheit'],
+		props: ['query', 'lat', 'lon', 'update'],
 		data() {
 			return {
         city: 'Fetching location...',
@@ -24,7 +24,7 @@
 			}
 		},
 		created: function() {
-			this.checkFarenheit();
+			this.isFahrenheit();
 		},
 		components: {
     	'current-forecast': Current,
@@ -34,41 +34,34 @@
 			query: function() {
 				this.prepareQueryApiCall(this.query);
 			},
-			position: function() {
-				this.prepareGPSApiCall(this.position);
+			update: function() {
+				this.prepareGPSApiCall(this.lat, this.lon);
 			},
-			farenheit: function() {
-				this.checkFarenheit();
+			fahrenheit: function() {
+				this.isFahrenheit();
 			}
 		},
   	methods: {
-  		checkFarenheit: function() {
-				if (this.farenheit == 'true') {
-					console.log('farenheit');
+  		isFahrenheit: function() {
+  			var isFahrenheit = localStorage.getItem('castform-fahrenheit') == 'true';
+				if (isFahrenheit) {
 					this.units = 'F';
 				} else {
-					console.log('celsius');
 					this.units = 'C';
 				}
+				return isFahrenheit;
   		},
-      prepareGPSApiCall: function(position) {
-        var lat = position.coords.latitude;
-        var lon = position.coords.longitude;  
-        var unit = 'metric';
-      	if (localStorage.getItem('castform-farenheit') == 'true') {
-        	var unit = 'imperial';
-        }
+  		convertToFahrenheit: function(temp) {
+				return Math.trunc(temp * 9 / 5) + 32;
+  		},
+      prepareGPSApiCall: function(lat, lon) {
         var apiUrl = 'https://api.openweathermap.org/data/2.5/weather?lat=' +
-          lat + '&lon=' + lon + '&units=' + unit + '&APPID=' + this.apiKey;
+          lat + '&lon=' + lon + '&units=metric&APPID=' + this.apiKey;
         this.fetchWeather(apiUrl);
       },
       prepareQueryApiCall: function(query) {
-        var unit = 'metric';
-      	if (localStorage.getItem('castform-farenheit') == 'true') {
-        	var unit = 'imperial';
-        }
         var apiUrl = 'https://api.openweathermap.org/data/2.5/weather?q=' +
-        query + '&units=' + unit + '&APPID=' + this.apiKey;
+        query + '&units=metric&APPID=' + this.apiKey;
         this.fetchWeather(apiUrl);
       },
       fetchWeather: function(apiUrl) {
@@ -94,11 +87,21 @@
         }); 
       },
 			displayWeather: function(response) {
-				this.city = response['name'] + ', ' + response['sys']['country'];
-				this.temp = Math.trunc(response['main']['temp']);
-				this.high = Math.trunc(response['main']['temp_max']);
-				this.low = Math.trunc(response['main']['temp_min']);
+				var temp = Math.trunc(response['main']['temp']);
+				var high = Math.trunc(response['main']['temp_max']);
+				var low = Math.trunc(response['main']['temp_min']);
+				if (this.isFahrenheit()) {
+					temp = this.convertToFahrenheit(temp);
+					high = this.convertToFahrenheit(high);
+					low = this.convertToFahrenheit(low);
+				}
+				this.temp = temp;
+				this.high = high;
+				this.low = low;
 				this.description = response['weather'][0]['description'];
+				this.city = response['name'] + ', ' + response['sys']['country'];
+        localStorage.setItem('castform-last-lon', response['coord']['lon']);
+        localStorage.setItem('castform-last-lat', response['coord']['lat']);
 			},
 			changeBackground: function(response) {
 				var icon = response['weather'][0]['icon'].split('.')[0];

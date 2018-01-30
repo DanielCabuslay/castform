@@ -1,6 +1,6 @@
 <template>
   <main>
-    <settings-dialog id="settings_dialog"></settings-dialog>
+    <settings-dialog id="settings_dialog" @saved="updateSettings"></settings-dialog>
     <header>
       <section>
         <i id="icon" class="fas fa-tint header_icon"></i>
@@ -26,7 +26,7 @@
         </nav>
       </section>
     </header>
-    <main-app :query="query" :position="position" :farenheit="farenheit"></main-app>
+    <main-app :query="query" :lat="lat" :lon="lon" :update="update"></main-app>
     <div id="watermark_text">
       Weather data provided by <a target="_blank" ref="noopener noreferrer" href="https://openweathermap.org/">OpenWeatherMap</a>
     </div>
@@ -42,8 +42,9 @@
       return {
         input: '',
         query: '',
-        farenheit: '',
-        position: ''
+        lat: '',
+        lon: '',
+        update: ''
       }
     },
     components: {
@@ -54,25 +55,29 @@
       if (!window.localStorage || !localStorage.getItem('castform-visited')) {
         localStorage.setItem('castform-visited', 'true');
         localStorage.setItem('castform-default-location', 'Toronto');
-        localStorage.setItem('castform-farenheit', 'false');
+        localStorage.setItem('castform-fahrenheit', 'false');
       }
       this.promptForGPS(true);
-      this.farenheit = localStorage.getItem('castform-farenheit');
     },
     methods: {
       sendQuery: function() {
         this.query = this.input;
+        this.update = Date.now();
         document.getElementById('loading_spinner').style.opacity = 1;
-        this.farenheit = localStorage.getItem('castform-farenheit');
       },
       sendPosition: function(pos) {
-        this.position = pos;
-        this.farenheit = localStorage.getItem('castform-farenheit');
+        this.update = Date.now();
+        this.lat = pos.coords.latitude;
+        this.lon = pos.coords.longitude;  
       },
       sendDefaultLocation: function() {
         //placeholder until setting is configured
+        this.update = Date.now();
         this.query = localStorage.getItem('castform-default-location');
-        this.farenheit = localStorage.getItem('castform-farenheit');
+      },
+      sendLastLocation: function() {
+        this.lat = localStorage.getItem('castform-last-lat');
+        this.lon = localStorage.getItem('castform-last-lon');
       },
       promptForGPS: function(initialLoad) {
         if (navigator.geolocation) {
@@ -86,12 +91,10 @@
       },
       openSettings: function() {
         document.getElementById('settings_dialog').classList.add('dialog_open');
-        if (localStorage.getItem('castform-farenheit') == 'true') {
-          document.getElementById('farenheit_setting').checked = true;
-        } else {
-          document.getElementById('farenheit_setting').checked = false;
-        }
-        this.farenheit = localStorage.getItem('castform-farenheit');
+      },
+      updateSettings: function(time) {
+        this.update = time;
+        this.sendLastLocation();
       }
     }
   }

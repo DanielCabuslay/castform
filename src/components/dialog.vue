@@ -13,8 +13,8 @@
 					<div>Text here</div>
 				</div>
 				<div class="dialog_body_row">
-					<div>Show Farenheit</div>
-					<div><input id="farenheit_setting" @click="updateFarenheit" type="checkbox"></div>
+					<div>Show Fahrenheit</div>
+					<div><input id="fahrenheit_setting" @click="updateFahrenheit" type="checkbox"></div>
 				</div>
 			</section>
 			<section class="dialog_footer">
@@ -26,15 +26,26 @@
 
 <script>
 	export default {
+		created: function() {
+			window.onload = this.loadSettings;
+		},
 		methods: {
 			closeDialog: function() {
+				this.$emit('saved', Date.now());
 				document.getElementById('settings_dialog').classList.remove('dialog_open');
 			},
-			updateFarenheit: function() {
-				if (document.getElementById('farenheit_setting').checked) {
-					localStorage.setItem('castform-farenheit', 'true')
+			loadSettings: function() {
+				if (localStorage.getItem('castform-fahrenheit') == 'true') {
+	        document.getElementById('fahrenheit_setting').checked = true;
+	      } else {
+	        document.getElementById('fahrenheit_setting').checked = false;
+	      }				
+			},
+			updateFahrenheit: function() {
+				if (document.getElementById('fahrenheit_setting').checked) {
+					localStorage.setItem('castform-fahrenheit', 'true')
 				} else {
-					localStorage.setItem('castform-farenheit', 'false')					
+					localStorage.setItem('castform-fahrenheit', 'false')					
 				}
 			}
 		}
