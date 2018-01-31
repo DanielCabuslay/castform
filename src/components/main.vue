@@ -10,7 +10,7 @@
   import Toast from './toast.vue';
 
 	export default {
-		props: ['query', 'lat', 'lon', 'update'],
+		props: ['query', 'position', 'id', 'update'],
 		data() {
 			return {
         city: 'Fetching location...',
@@ -32,13 +32,17 @@
 		},
 		watch: {
 			query: function() {
-				this.prepareQueryApiCall(this.query);
+				this.prepareQueryApiCall();
+			},
+			position: function() {
+				this.prepareLatLonApiCall();
+			},
+			id: function() {
+				this.prepareIdApiCall();
 			},
 			update: function() {
-				this.prepareGPSApiCall(this.lat, this.lon);
-			},
-			fahrenheit: function() {
 				this.isFahrenheit();
+				this.prepareIdApiCall();
 			}
 		},
   	methods: {
@@ -54,14 +58,20 @@
   		convertToFahrenheit: function(temp) {
 				return Math.trunc(temp * 9 / 5) + 32;
   		},
-      prepareGPSApiCall: function(lat, lon) {
+      prepareLatLonApiCall: function() {
         var apiUrl = 'https://api.openweathermap.org/data/2.5/weather?lat=' +
-          lat + '&lon=' + lon + '&units=metric&APPID=' + this.apiKey;
+          this.position.coords.latitude + '&lon=' + this.position.coords.longitude
+          + '&units=metric&APPID=' + this.apiKey;
         this.fetchWeather(apiUrl);
       },
-      prepareQueryApiCall: function(query) {
+      prepareQueryApiCall: function() {
         var apiUrl = 'https://api.openweathermap.org/data/2.5/weather?q=' +
-        query + '&units=metric&APPID=' + this.apiKey;
+        this.query + '&units=metric&APPID=' + this.apiKey;
+        this.fetchWeather(apiUrl);
+      },
+      prepareIdApiCall: function() {
+        var apiUrl = 'https://api.openweathermap.org/data/2.5/weather?id=' +
+        this.id + '&units=metric&APPID=' + this.apiKey;
         this.fetchWeather(apiUrl);
       },
       fetchWeather: function(apiUrl) {
@@ -100,8 +110,9 @@
 				this.low = low;
 				this.description = response['weather'][0]['description'];
 				this.city = response['name'] + ', ' + response['sys']['country'];
-        localStorage.setItem('castform-last-lon', response['coord']['lon']);
-        localStorage.setItem('castform-last-lat', response['coord']['lat']);
+        // localStorage.setItem('castform-last-lon', response['coord']['lon']);
+        // localStorage.setItem('castform-last-lat', response['coord']['lat']);
+        localStorage.setItem('castform-last-id', response['id']);
 			},
 			changeBackground: function(response) {
 				var icon = response['weather'][0]['icon'].split('.')[0];

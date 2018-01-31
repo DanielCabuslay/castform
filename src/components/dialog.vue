@@ -13,7 +13,7 @@
 					<div>Text here</div>
 				</div>
 				<div class="dialog_body_row">
-					<div>Show Fahrenheit</div>
+					<div>Show temperature in Fahrenheit</div>
 					<div><input id="fahrenheit_setting" @click="updateFahrenheit" type="checkbox"></div>
 				</div>
 			</section>

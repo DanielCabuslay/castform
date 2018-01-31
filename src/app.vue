@@ -26,7 +26,7 @@
         </nav>
       </section>
     </header>
-    <main-app :query="query" :lat="lat" :lon="lon" :update="update"></main-app>
+    <main-app :query="query" :id="id" :position="position" :update="update"></main-app>
     <div id="watermark_text">
       Weather data provided by <a target="_blank" ref="noopener noreferrer" href="https://openweathermap.org/">OpenWeatherMap</a>
     </div>
@@ -42,8 +42,8 @@
       return {
         input: '',
         query: '',
-        lat: '',
-        lon: '',
+        id: '',
+        position: '',
         update: ''
       }
     },
@@ -61,23 +61,19 @@
     },
     methods: {
       sendQuery: function() {
-        this.query = this.input;
-        this.update = Date.now();
-        document.getElementById('loading_spinner').style.opacity = 1;
+        if (this.input.length > 0) {
+          this.query = this.input;
+          document.getElementById('loading_spinner').style.opacity = 1;          
+        }
       },
       sendPosition: function(pos) {
-        this.update = Date.now();
-        this.lat = pos.coords.latitude;
-        this.lon = pos.coords.longitude;  
+        this.position = pos;
       },
       sendDefaultLocation: function() {
-        //placeholder until setting is configured
-        this.update = Date.now();
         this.query = localStorage.getItem('castform-default-location');
       },
       sendLastLocation: function() {
-        this.lat = localStorage.getItem('castform-last-lat');
-        this.lon = localStorage.getItem('castform-last-lon');
+        this.id = localStorage.getItem('castform-last-id');
       },
       promptForGPS: function(initialLoad) {
         if (navigator.geolocation) {
@@ -94,6 +90,7 @@
       },
       updateSettings: function(time) {
         this.update = time;
+        document.getElementById('loading_spinner').style.opacity = 1;
         this.sendLastLocation();
       }
     }
