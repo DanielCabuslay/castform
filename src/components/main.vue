@@ -7,28 +7,28 @@
 
 <script>
 	import Current from './current_forecast.vue';
-  import Toast from './toast.vue';
+  	import Toast from './toast.vue';
 
 	export default {
 		props: ['query', 'position', 'id', 'update'],
 		data() {
 			return {
-        city: 'Fetching location...',
-        temp: '--',
-        units: '',
-        high: '--',
-        low: '--',
-        description: 'Fetching weather...',
-        toastMessage: '',
-        apiKey: '2a6756e781c723daf2ae3f1e9a8fb98b'
+		        city: 'Fetching location...',
+		        temp: '--',
+		        units: '',
+		        high: '--',
+		        low: '--',
+		        description: 'Fetching weather...',
+		        toastMessage: '',
+		        apiKey: '2a6756e781c723daf2ae3f1e9a8fb98b'
 			}
 		},
 		created: function() {
 			this.isFahrenheit();
 		},
 		components: {
-    	'current-forecast': Current,
-    	'toast': Toast
+	    	'current-forecast': Current,
+	    	'toast': Toast
 		},
 		watch: {
 			query: function() {
@@ -45,57 +45,57 @@
 				this.prepareIdApiCall();
 			}
 		},
-  	methods: {
-  		isFahrenheit: function() {
-  			var isFahrenheit = localStorage.getItem('castform-fahrenheit') == 'true';
-				if (isFahrenheit) {
-					this.units = 'F';
-				} else {
-					this.units = 'C';
-				}
-				return isFahrenheit;
-  		},
-  		convertToFahrenheit: function(temp) {
-				return Math.trunc(temp * 9 / 5) + 32;
-  		},
-      prepareLatLonApiCall: function() {
-        var apiUrl = 'https://api.openweathermap.org/data/2.5/weather?lat=' +
-          this.position.coords.latitude + '&lon=' + this.position.coords.longitude
-          + '&units=metric&APPID=' + this.apiKey;
-        this.fetchWeather(apiUrl);
-      },
-      prepareQueryApiCall: function() {
-        var apiUrl = 'https://api.openweathermap.org/data/2.5/weather?q=' +
-        this.query + '&units=metric&APPID=' + this.apiKey;
-        this.fetchWeather(apiUrl);
-      },
-      prepareIdApiCall: function() {
-        var apiUrl = 'https://api.openweathermap.org/data/2.5/weather?id=' +
-        this.id + '&units=metric&APPID=' + this.apiKey;
-        this.fetchWeather(apiUrl);
-      },
-      fetchWeather: function(apiUrl) {
-        var request = new Request(apiUrl);
-        fetch(request).then(response => {
-          if (response.status === 200) {
-            return response.json();
-          } else {
-          	this.toastMessage = 'Unable to find ' + this.query;
-		      	var toast = document.getElementById('toast');
-						toast.classList.add('toast_slide');
-						setTimeout(function() {
-		      		toast.classList.remove('toast_slide');
-						}, 3000)
-        		document.getElementById('loading_spinner').style.opacity = 0;
-            throw new Error('Status returned by server: ' + response.status);
-          }
-        })
-        .then(response => {
-          this.displayWeather(response);
-          this.changeBackground(response);
-        	document.getElementById('loading_spinner').style.opacity = 0;
-        }); 
-      },
+	  	methods: {
+	  		isFahrenheit: function() {
+	  			var isFahrenheit = localStorage.getItem('castform-fahrenheit') == 'true';
+					if (isFahrenheit) {
+						this.units = 'F';
+					} else {
+						this.units = 'C';
+					}
+					return isFahrenheit;
+	  		},
+	  		convertToFahrenheit: function(temp) {
+					return Math.trunc(temp * 9 / 5) + 32;
+	  		},
+			prepareLatLonApiCall: function() {
+				var apiUrl = 'https://api.openweathermap.org/data/2.5/weather?lat=' +
+				  this.position.coords.latitude + '&lon=' + this.position.coords.longitude
+				  + '&units=metric&APPID=' + this.apiKey;
+				this.fetchWeather(apiUrl);
+			},
+			prepareQueryApiCall: function() {
+				var apiUrl = 'https://api.openweathermap.org/data/2.5/weather?q=' +
+				this.query + '&units=metric&APPID=' + this.apiKey;
+				this.fetchWeather(apiUrl);
+			},
+			prepareIdApiCall: function() {
+				var apiUrl = 'https://api.openweathermap.org/data/2.5/weather?id=' +
+				this.id + '&units=metric&APPID=' + this.apiKey;
+				this.fetchWeather(apiUrl);
+			},
+			fetchWeather: function(apiUrl) {
+				var request = new Request(apiUrl);
+				fetch(request).then(response => {
+				  if (response.status === 200) {
+				    return response.json();
+				  } else {
+				  	this.toastMessage = 'Unable to find ' + this.query;
+				      	var toast = document.getElementById('toast');
+								toast.classList.add('toast_slide');
+								setTimeout(function() {
+				      		toast.classList.remove('toast_slide');
+								}, 3000)
+						document.getElementById('loading_spinner').style.opacity = 0;
+				    throw new Error('Status returned by server: ' + response.status);
+				  }
+				})
+				.then(response => {
+				  this.displayWeather(response);
+				  this.changeBackground(response);
+					document.getElementById('loading_spinner').style.opacity = 0;
+				}); 
+			},
 			displayWeather: function(response) {
 				var temp = Math.trunc(response['main']['temp']);
 				var high = Math.trunc(response['main']['temp_max']);
@@ -110,9 +110,7 @@
 				this.low = low;
 				this.description = response['weather'][0]['description'];
 				this.city = response['name'] + ', ' + response['sys']['country'];
-        // localStorage.setItem('castform-last-lon', response['coord']['lon']);
-        // localStorage.setItem('castform-last-lat', response['coord']['lat']);
-        localStorage.setItem('castform-last-id', response['id']);
+			    localStorage.setItem('castform-last-id', response['id']);
 			},
 			changeBackground: function(response) {
 				var icon = response['weather'][0]['icon'].split('.')[0];
@@ -148,7 +146,7 @@
 					document.body.style.backgroundColor = 'var(--weather-overcast-night)';
 				}
 			}
-    }
+	    }
 	}
 </script>
 

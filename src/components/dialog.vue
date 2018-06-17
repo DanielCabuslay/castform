@@ -2,16 +2,14 @@
 	<div class="dialog_area">
 		<aside class="dialog">
 			<section class="dialog_header">
-        <i class="fas fa-cog fa-fw"></i>
-				<span class="dialog_title">
-        	Settings
-        </span>
+		        <i class="fas fa-cog fa-fw"></i>
+				<span class="dialog_title">Settings</span>
 			</section>
 			<section class="dialog_body">
-				<div class="dialog_body_row">
+				<!-- <div class="dialog_body_row">
 					<div>Default City</div>
 					<div>Text here</div>
-				</div>
+				</div> -->
 				<div class="dialog_body_row">
 					<div>Show temperature in Fahrenheit</div>
 					<div><input id="fahrenheit_setting" @click="updateFahrenheit" type="checkbox"></div>
@@ -36,10 +34,10 @@
 			},
 			loadSettings: function() {
 				if (localStorage.getItem('castform-fahrenheit') == 'true') {
-	        document.getElementById('fahrenheit_setting').checked = true;
-	      } else {
-	        document.getElementById('fahrenheit_setting').checked = false;
-	      }				
+					document.getElementById('fahrenheit_setting').checked = true;
+				} else {
+					document.getElementById('fahrenheit_setting').checked = false;
+				}				
 			},
 			updateFahrenheit: function() {
 				if (document.getElementById('fahrenheit_setting').checked) {
