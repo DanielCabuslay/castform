@@ -1,29 +1,65 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/>
-  </div>
+  <main id="app">
+    <Header/>
+    <Weather/>
+  </main>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import HelloWorld from './components/HelloWorld.vue'
+import Header from './components/Header.vue'
+import Weather from './components/Weather.vue'
 
 @Component({
   components: {
-    HelloWorld
+    Header,
+    HelloWorld,
+    Weather
   }
 })
 export default class App extends Vue {}
 </script>
 
 <style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+@import 'styles/variables.scss';
+
+@font-face {
+  font-family: 'DM Sans';
+  font-weight: 400;
+  font-display: swap;
+  src: url('assets/fonts/DMSans-Regular.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'DM Sans';
+  font-weight: 500;
+  font-display: swap;
+  src: url('assets/fonts/DMSans-Medium.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'DM Sans';
+  font-weight: 700;
+  font-display: swap;
+  src: url('assets/fonts/DMSans-Bold.ttf') format('truetype');
+}
+html {
+  background: $skygradient;
+  background-repeat: no-repeat;
+  height: 100vh;
+  font-family: $fontfamily;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+}
+body {
+  margin: 0;
+}
+input {
+  font-family: $fontfamily;
+  font-size: 1em;
+  padding: 0.5rem;
+}
+.container {
+  width: 1024px;
+  margin: auto;
 }
 </style>
