@@ -52,6 +52,7 @@ export default class App extends Vue {
 html {
   background: $skygradient;
   background-repeat: no-repeat;
+  background-position: top;
   height: 100vh;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -68,9 +69,25 @@ body {
 input {
   font-size: 1em;
   padding: 0.5rem;
+  font-weight: 500;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid $blacktranslucent;
+  &:focus {
+    border-bottom: 1px solid black;
+  }
+}
+::placeholder {
+  color: $blacktranslucent;
 }
 .container {
   width: 1024px;
   margin: auto;
+}
+@media (max-width: 1024px) {
+  .container {
+    width: calc(100vw - 1rem);
+    margin: 0 0.5rem;
+  }
 }
 </style>

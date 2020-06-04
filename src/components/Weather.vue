@@ -35,4 +35,14 @@ export default class Weather extends Vue {
 .container {
   margin-top: 4rem;
 }
+@media (max-width: 768px) {
+  .container {
+    margin-top: 3rem;
+  }
+}
+@media (max-width: 425px) {
+  .container {
+    margin-top: 2rem;
+  }
+}
 </style>

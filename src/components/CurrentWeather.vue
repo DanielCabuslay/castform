@@ -1,6 +1,9 @@
 <template>
   <div id="current-forecast">
     <section>
+      <div class="date">
+        {{ date }}
+      </div>
       <div class="city">
         {{ city }}
       </div>
@@ -13,8 +16,6 @@
       <div class="temp">
         {{ currentTemp }}&deg;C
       </div>
-    </section>
-    <section>
       <div class="high-low">
         <div>
           <ArrowNarrowUp/>{{ currentHigh }}&deg;C
@@ -23,6 +24,8 @@
           <ArrowNarrowDown/>{{ currentLow }}&deg;C
         </div>
       </div>
+    </section>
+    <section>
       <div class="feels-like">Feels like {{ feelsLike }}&deg;C</div>
       <div class="wind">{{ windSpeed }} km/h {{ windDirection }}</div>
     </section>
@@ -82,6 +85,18 @@ export default class CurrentWeather extends Vue {
   get description () {
     if (this.$store.getters.currentWeather) {
       return this.$store.getters.currentWeather.weather[0].main
+    }
+  }
+
+  get date () {
+    if (this.$store.getters.currentWeather) {
+      return new Date((this.$store.getters.currentWeather.dt + this.$store.getters.currentWeather.timezone) * 1000).toLocaleDateString('en-CA', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        timeZone: 'UTC'
+      })
     }
   }
 
@@ -160,12 +175,19 @@ section:first-child {
   flex-direction: column;
 }
 section:nth-child(2) {
+  display: grid;
+  grid-gap: 2rem;
+  grid-template-columns: repeat(3, auto);
   margin-top: 0.5rem;
 }
 section:last-child {
   margin-top: 1rem;
+  div {
+    margin: 0 1rem;
+  }
 }
 .city, .description {
+  margin-top: 0.5rem;
   font-weight: 500;
 }
 .city {
@@ -173,16 +195,13 @@ section:last-child {
 }
 .description {
   font-size: 1.5em;
-  margin-top: 0.5rem;
 }
 .temp {
   font-size: 11em;
-  margin-left: 2rem;
   text-shadow: $shadow;
 }
 .high-low {
-  font-size: 1.5em;
-  margin-right: 3rem;
+  font-size: 1.25em;
   svg {
     height: 1em;
   }
@@ -191,16 +210,52 @@ section:last-child {
     align-items: center;
   }
   div:first-child {
-    border-bottom: 1px solid black;
-    padding-bottom: 0.5rem;
+    margin-bottom: 0.5rem;
   }
   div:last-child {
-    border-top: 1px solid black;
-    padding-top: 0.5rem;
+    margin-top: 0.5rem;
   }
 }
-.wind {
-  margin-left: 3rem;
+@media (max-width: 768px) {
+  section:nth-child(2) {
+    grid-template-columns: auto auto;
+    grid-template-rows: 1fr;
+    grid-gap: 0.5rem;
+    margin-top: 0.5rem;
+  }
+  .temp {
+    font-size: 7em;
+  }
+  .high-low {
+    grid-column: 1 / -1;
+    margin: auto;
+    display: flex;
+    div {
+      margin: 0 0.5rem;
+    }
+    div:first-child {
+      border-bottom: none;
+      margin-bottom: 0rem;
+    }
+    div:last-child {
+      border-top: none;
+      margin-top: 0rem;
+    }
+  }
+}
+@media (max-width: 425px) {
+  .city {
+    font-size: 1.5em;
+  }
+  .description {
+    font-size: 1.25em;
+  }
+  .temp {
+    font-size: 5em;
+  }
+  .high-low {
+    font-size: 1em;
+  }
 }
 </style>
 
@@ -210,6 +265,20 @@ section:last-child {
   svg {
     height: 11em;
     filter: drop-shadow($shadow);
+  }
+}
+@media (max-width: 768px) {
+  #current-forecast .icon {
+    svg {
+      height: 7em;
+    }
+  }
+}
+@media (max-width: 425px) {
+  #current-forecast .icon {
+    svg {
+      height: 5em;
+    }
   }
 }
 </style>

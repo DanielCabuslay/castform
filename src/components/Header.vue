@@ -11,7 +11,6 @@
         </div>
       </section>
       <section>
-        <div class="date">{{ currentDate }}</div>
         <button>
           <Cog></Cog>
         </button>
@@ -35,18 +34,8 @@ import Search from './heroicons/Search.vue'
   }
 })
 export default class Header extends Vue {
-  currentDate = ''
   query = ''
   disabled = false
-
-  created () {
-    this.currentDate = new Date(Date.now()).toLocaleDateString('en-CA', {
-      weekday: 'long',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    })
-  }
 
   search () {
     this.disabled = true
@@ -77,6 +66,8 @@ export default class Header extends Vue {
 </script>
 
 <style lang="scss" scoped>
+@import '@/styles/variables';
+
 header {
   height: 64px;
   display: flex;
@@ -90,16 +81,12 @@ header {
   display: flex;
   align-items: center;
   .icon {
-    border-bottom: 1px solid black;
     padding: 6px;
     margin-right: -36px;
     height: 24px;
   }
   input {
-    background: transparent;
-    border: none;
-    border-bottom: 1px solid black;
-    width: 300px;
+    width: 250px;
     padding-left: 36px;
   }
 }
@@ -112,17 +99,23 @@ section:last-child {
     margin-right: 2rem;
   }
 }
-  button {
-    background: transparent;
-    border: none;
-    border-radius: 0.25rem;
-    margin-left: 0.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0.25rem 0.5rem;
-    svg {
-      height: 32px;
+button {
+  background: transparent;
+  border: none;
+  border-radius: 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.25rem 0.5rem;
+  svg {
+    height: 32px;
+  }
+}
+@media (max-width: 425px) {
+  .search-bar {
+    input {
+      width: 150px;
     }
   }
+}
 </style>
