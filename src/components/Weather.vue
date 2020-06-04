@@ -1,6 +1,5 @@
 <template>
   <div class="container">
-    <div class="city">{{ city }}, {{ country }}</div>
     <CurrentWeather></CurrentWeather>
   </div>
 </template>
@@ -35,8 +34,5 @@ export default class Weather extends Vue {
 <style scoped lang="scss">
 .container {
   margin-top: 4rem;
-}
-.city {
-  font-size: 2em;
 }
 </style>
