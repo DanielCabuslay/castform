@@ -18,8 +18,12 @@
     </section>
     <section>
       <div class="high-low">
-        <div>{{ currentHigh }}&deg;C</div>
-        <div>{{ currentLow }}&deg;C</div>
+        <div>
+          <ArrowNarrowUp/>{{ currentHigh }}&deg;C
+        </div>
+        <div>
+          <ArrowNarrowDown/>{{ currentLow }}&deg;C
+        </div>
       </div>
       <div class="feels-like">Feels like {{ feelsLike }}&deg;C</div>
       <div class="wind">{{ windSpeed }} km/h {{ windDirection }}</div>
@@ -30,10 +34,13 @@
 <script lang="ts">
 import Vue from 'vue'
 import Component from 'vue-class-component'
-import WIDayCloudyGusts from '@/components/weather-icons/WIDayCloudyGusts.vue'
+import { ArrowNarrowUp, ArrowNarrowDown } from '@/components/heroicons'
+import { WIDayCloudyGusts } from '@/components/weather-icons'
 
 @Component({
   components: {
+    ArrowNarrowUp,
+    ArrowNarrowDown,
     WIDayCloudyGusts
   }
 })
@@ -158,6 +165,11 @@ section:last-child {
   font-size: 1.5em;
   margin-top: 0.5rem;
 }
+.icon {
+  svg {
+    height: 11em;
+  }
+}
 .temp {
   font-size: 11em;
   margin-left: 2rem;
@@ -165,7 +177,14 @@ section:last-child {
 }
 .high-low {
   font-size: 1.5em;
-  margin-right: 2rem;
+  margin-right: 3rem;
+  svg {
+    height: 1em;
+  }
+  div {
+    display: flex;
+    align-items: center;
+  }
   div:first-child {
     border-bottom: 1px solid black;
     padding-bottom: 0.5rem;
@@ -176,6 +195,6 @@ section:last-child {
   }
 }
 .wind {
-  margin-left: 2rem;
+  margin-left: 3rem;
 }
 </style>
