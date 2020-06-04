@@ -5,8 +5,10 @@
         <div class="search-bar">
           <img class="logo" src="@/assets/logo-black.png">
           <Search class="icon"></Search>
-          <input placeholder="Search for a city...">
-          <LocationMarker class="location-icon"></LocationMarker>
+          <input @keyup.enter="search()" v-model="query" placeholder="Search for a city..." :disabled="disabled">
+          <button class="current-location" @click="promptUserLocation">
+            <LocationMarker></LocationMarker>
+          </button>
         </div>
       </section>
       <section>
@@ -18,7 +20,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
+import Vue from 'vue'
+import Component from 'vue-class-component'
 import Cog from './heroicons/Cog.vue'
 import LocationMarker from './heroicons/LocationMarker.vue'
 import Search from './heroicons/Search.vue'
@@ -32,6 +35,8 @@ import Search from './heroicons/Search.vue'
 })
 export default class Header extends Vue {
   currentDate = ''
+  query = ''
+  disabled = false
 
   created () {
     this.currentDate = new Date(Date.now()).toLocaleDateString('en-CA', {
@@ -40,6 +45,25 @@ export default class Header extends Vue {
       month: 'long',
       day: 'numeric'
     })
+  }
+
+  search () {
+    this.disabled = true
+    this.$store.dispatch('updateCurrentWeather', this.query).then(() => {
+      this.disabled = false
+    }, () => {
+      this.disabled = false
+    })
+  }
+
+  promptUserLocation () {
+    navigator.geolocation.getCurrentPosition(this.getCurrentLocationWeather)
+  }
+
+  getCurrentLocationWeather (position: any) {
+    const lat = position.coords.latitude
+    const lon = position.coords.longitude
+    this.$store.dispatch('getCurrentLocationWeather', { lat, lon })
   }
 }
 </script>
@@ -73,8 +97,10 @@ header {
     width: 300px;
     padding-left: 36px;
   }
-  .location-icon {
-    margin-left: 0.5rem;
+  .current-location {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid black;
   }
 }
 section:last-child {

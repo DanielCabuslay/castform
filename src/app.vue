@@ -6,19 +6,26 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
-import HelloWorld from './components/HelloWorld.vue'
+import Vue from 'vue'
+import Component from 'vue-class-component'
 import Header from './components/Header.vue'
 import Weather from './components/Weather.vue'
 
 @Component({
   components: {
     Header,
-    HelloWorld,
     Weather
   }
 })
-export default class App extends Vue {}
+export default class App extends Vue {
+  created () {
+    this.getCurrentWeather()
+  }
+
+  async getCurrentWeather () {
+    await this.$store.dispatch('updateCurrentWeather', 'Toronto')
+  }
+}
 </script>
 
 <style lang="scss">

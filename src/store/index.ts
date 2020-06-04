@@ -23,12 +23,29 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    async updateCurrentWeather (context) {
+    async updateCurrentWeather (context, query) {
       return new Promise((resolve, reject) => {
         const weatherService = new WeatherService()
-        const weather = '4'
-        context.commit(weather)
-        resolve()
+        weatherService.getCurrentWeather(query).then((response: any) => {
+          context.commit('updateCurrentWeather', response.body)
+          resolve()
+        }, (error) => {
+          console.error(error)
+          reject(error)
+        })
+      })
+    },
+    async getCurrentLocationWeather (context, { lat, lon }) {
+      return new Promise((resolve, reject) => {
+        const weatherService = new WeatherService()
+        weatherService.getCurrentLocationWeather(lat, lon).then((response: any) => {
+          console.log(response.body)
+          context.commit('updateCurrentWeather', response.body)
+          resolve()
+        }, (error) => {
+          console.error(error)
+          reject(error)
+        })
       })
     }
   },
