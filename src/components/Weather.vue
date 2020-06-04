@@ -8,12 +8,10 @@
 import Vue from 'vue'
 import Component from 'vue-class-component'
 import CurrentWeather from './CurrentWeather.vue'
-import WIDayCloudyGusts from '@/components/weather-icons/WIDayCloudyGusts.vue'
 
 @Component({
   components: {
-    CurrentWeather,
-    WIDayCloudyGusts
+    CurrentWeather
   }
 })
 export default class Weather extends Vue {

@@ -11,7 +11,7 @@
         </div>
       </section>
       <section>
-        <button>
+        <button @click="openSettings()">
           <Cog></Cog>
         </button>
       </section>
@@ -61,6 +61,20 @@ export default class Header extends Vue {
     }, () => {
       this.disabled = false
     })
+  }
+
+  getCurrentLocationWeatherOneCall (position: any) {
+    const lat = position.coords.latitude
+    const lon = position.coords.longitude
+    this.$store.dispatch('getCurrentLocationWeatherOneCall', { lat, lon }).then(() => {
+      this.disabled = false
+    }, () => {
+      this.disabled = false
+    })
+  }
+
+  openSettings () {
+    this.$store.commit('changeSettingsState')
   }
 }
 </script>

@@ -1,5 +1,6 @@
 <template>
   <main id="app">
+    <Settings/>
     <Header/>
     <Weather/>
   </main>
@@ -10,11 +11,13 @@ import Vue from 'vue'
 import Component from 'vue-class-component'
 import Header from './components/Header.vue'
 import Weather from './components/Weather.vue'
+import Settings from './components/Settings.vue'
 
 @Component({
   components: {
     Header,
-    Weather
+    Weather,
+    Settings
   }
 })
 export default class App extends Vue {
@@ -33,12 +36,6 @@ export default class App extends Vue {
 
 @font-face {
   font-family: 'Quicksand';
-  font-weight: 300;
-  font-display: swap;
-  src: url('assets/fonts/Quicksand-Light.ttf') format('truetype');
-}
-@font-face {
-  font-family: 'Quicksand';
   font-weight: 400;
   font-display: swap;
   src: url('assets/fonts/Quicksand-Regular.ttf') format('truetype');
@@ -49,6 +46,15 @@ export default class App extends Vue {
   font-display: swap;
   src: url('assets/fonts/Quicksand-Medium.ttf') format('truetype');
 }
+@font-face {
+  font-family: 'Quicksand';
+  font-weight: 600;
+  font-display: swap;
+  src: url('assets/fonts/Quicksand-SemiBold.ttf') format('truetype');
+}
+h1 {
+  font-weight: 600;
+}
 html {
   background: $skygradient;
   background-repeat: no-repeat;
@@ -57,7 +63,7 @@ html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-html, input, button {
+html, input, button, select {
   font-family: $fontfamily;
 }
 button {

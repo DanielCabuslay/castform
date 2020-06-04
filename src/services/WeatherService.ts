@@ -21,6 +21,17 @@ export class WeatherService extends Vue {
     return this.$http.get(environment.apiUrl + 'weather', { params })
   }
 
+  getCurrentLocationWeatherOneCall (lat: number, lon: number) {
+    const params = {
+      lat,
+      lon,
+      units: 'metric',
+      exclude: 'minutely',
+      appId: environment.apiKey
+    }
+    return this.$http.get(environment.apiUrl + 'onecall', { params })
+  }
+
   getDailyForecast (query: string) {
     const params = {
       q: query,

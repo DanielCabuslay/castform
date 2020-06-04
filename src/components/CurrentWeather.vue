@@ -14,20 +14,20 @@
     <section>
       <WeatherIconViewer class="icon" v-bind:id="weatherId"/>
       <div class="temp">
-        {{ currentTemp }}&deg;C
+        {{ currentTemp }}&deg;{{ temperatureUnits }}
       </div>
       <div class="high-low">
         <div>
-          <ArrowNarrowUp/>{{ currentHigh }}&deg;C
+          <ArrowNarrowUp/>{{ currentHigh }}&deg;{{ temperatureUnits }}
         </div>
         <div>
-          <ArrowNarrowDown/>{{ currentLow }}&deg;C
+          <ArrowNarrowDown/>{{ currentLow }}&deg;{{ temperatureUnits }}
         </div>
       </div>
     </section>
     <section>
-      <div class="feels-like">Feels like {{ feelsLike }}&deg;C</div>
-      <div class="wind">{{ windSpeed }} km/h {{ windDirection }}</div>
+      <div class="feels-like">Feels like {{ feelsLike }}&deg;{{ temperatureUnits }}</div>
+      <div class="wind">{{ windSpeed }} {{ speedUnits }} {{ windDirection }}</div>
     </section>
   </div>
 </template>
@@ -48,31 +48,46 @@ import WeatherIconViewer from './WeatherIconViewer.vue'
 export default class CurrentWeather extends Vue {
   get currentTemp () {
     if (this.$store.getters.currentWeather) {
+      if (this.$store.getters.units === 'imperial') {
+        return Math.trunc((this.$store.getters.currentWeather.main.temp * 1.8) + 32)
+      }
       return Math.trunc(this.$store.getters.currentWeather.main.temp)
     }
   }
 
   get currentHigh () {
     if (this.$store.getters.currentWeather) {
+      if (this.$store.getters.units === 'imperial') {
+        return Math.trunc((this.$store.getters.currentWeather.main.temp_max * 1.8) + 32)
+      }
       return Math.trunc(this.$store.getters.currentWeather.main.temp_max)
     }
   }
 
   get currentLow () {
     if (this.$store.getters.currentWeather) {
+      if (this.$store.getters.units === 'imperial') {
+        return Math.trunc((this.$store.getters.currentWeather.main.temp_min * 1.8) + 32)
+      }
       return Math.trunc(this.$store.getters.currentWeather.main.temp_min)
     }
   }
 
   get feelsLike () {
     if (this.$store.getters.currentWeather) {
+      if (this.$store.getters.units === 'imperial') {
+        return Math.trunc((this.$store.getters.currentWeather.main.feels_like * 1.8) + 32)
+      }
       return Math.trunc(this.$store.getters.currentWeather.main.feels_like)
     }
   }
 
   get windSpeed () {
     if (this.$store.getters.currentWeather) {
-      return this.$store.getters.currentWeather.wind.speed
+      if (this.$store.getters.units === 'imperial') {
+        return Math.round(this.$store.getters.currentWeather.wind.speed / 1.609344)
+      }
+      return Math.round(this.$store.getters.currentWeather.wind.speed)
     }
   }
 
@@ -158,6 +173,18 @@ export default class CurrentWeather extends Vue {
     }
     return 0
   }
+
+  get temperatureUnits () {
+    if (this.$store.getters.units) {
+      return this.$store.getters.units === 'imperial' ? 'F' : 'C'
+    }
+  }
+
+  get speedUnits () {
+    if (this.$store.getters.units) {
+      return this.$store.getters.units === 'imperial' ? 'mph' : 'km/h'
+    }
+  }
 }
 </script>
 
@@ -185,6 +212,9 @@ section:last-child {
   div {
     margin: 0 1rem;
   }
+}
+.date {
+  font-weight: 600;
 }
 .city, .description {
   margin-top: 0.5rem;
