@@ -7,12 +7,16 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     currentWeather: null,
+    defaultCityId: localStorage.getItem('defaultCityId'),
     units: localStorage.getItem('units'),
     showSettings: false
   },
   mutations: {
     updateCurrentWeather (state, weather) {
       state.currentWeather = weather
+    },
+    updateDefaultCityId (state) {
+      state.defaultCityId = localStorage.getItem('defaultCityId')
     },
     updateUnits (state) {
       state.units = localStorage.getItem('units')
@@ -24,6 +28,9 @@ export default new Vuex.Store({
   getters: {
     currentWeather: (state) => {
       return state.currentWeather
+    },
+    defaultCityId: (state) => {
+      return state.defaultCityId
     },
     units: (state) => {
       return state.units
@@ -38,6 +45,20 @@ export default new Vuex.Store({
         const weatherService = new WeatherService()
         weatherService.getCurrentWeather(query).then((response: any) => {
           context.commit('updateCurrentWeather', response.body)
+          localStorage.setItem('defaultCityId', response.body.id)
+          resolve()
+        }, (error) => {
+          console.error(error)
+          reject(error)
+        })
+      })
+    },
+    async updateCurrentWeatherById (context, id) {
+      return new Promise((resolve, reject) => {
+        const weatherService = new WeatherService()
+        weatherService.getCurrentWeatherById(id).then((response: any) => {
+          context.commit('updateCurrentWeather', response.body)
+          localStorage.setItem('defaultCityId', response.body.id)
           resolve()
         }, (error) => {
           console.error(error)
@@ -50,6 +71,7 @@ export default new Vuex.Store({
         const weatherService = new WeatherService()
         weatherService.getCurrentLocationWeather(lat, lon).then((response: any) => {
           context.commit('updateCurrentWeather', response.body)
+          localStorage.setItem('defaultCityId', response.body.id)
           resolve()
         }, (error) => {
           console.error(error)
@@ -68,6 +90,13 @@ export default new Vuex.Store({
           console.error(error)
           reject(error)
         })
+      })
+    },
+    async updateDefaultCityId (context, id) {
+      return new Promise((resolve) => {
+        localStorage.setItem('defaultCityId', id)
+        context.commit('updateDefaultCityId')
+        resolve()
       })
     },
     async updateUnits (context, unit) {

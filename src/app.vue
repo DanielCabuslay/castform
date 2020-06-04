@@ -21,18 +21,26 @@ import Settings from './components/Settings.vue'
   }
 })
 export default class App extends Vue {
-  created () {
-    this.getCurrentWeather()
-  }
+  defaultCityId = null
 
-  async getCurrentWeather () {
-    await this.$store.dispatch('updateCurrentWeather', 'Toronto')
+  beforeCreate () {
+    if (!localStorage.getItem('defaultCityId')) {
+      this.$store.dispatch('updateDefaultCityId', '6167865').then(() => {
+        this.defaultCityId = this.$store.getters.defaultCityId
+        this.$store.dispatch('updateCurrentWeatherById', this.defaultCityId)
+      })
+    } else {
+      if (this.$store.getters.defaultCityId) {
+        this.defaultCityId = this.$store.getters.defaultCityId
+        this.$store.dispatch('updateCurrentWeatherById', this.defaultCityId)
+      }
+    }
   }
 }
 </script>
 
 <style lang="scss">
-@import 'styles/variables.scss';
+@import '@/styles/variables';
 
 @font-face {
   font-family: 'Quicksand';

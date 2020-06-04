@@ -11,6 +11,15 @@ export class WeatherService extends Vue {
     return this.$http.get(environment.apiUrl + 'weather', { params })
   }
 
+  getCurrentWeatherById (id: number) {
+    const params = {
+      id,
+      units: 'metric',
+      appId: environment.apiKey
+    }
+    return this.$http.get(environment.apiUrl + 'weather', { params })
+  }
+
   getCurrentLocationWeather (lat: number, lon: number) {
     const params = {
       lat,
