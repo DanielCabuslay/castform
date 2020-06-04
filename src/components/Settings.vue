@@ -29,7 +29,6 @@ export default class Settings extends Vue {
 
   beforeCreate () {
     if (!localStorage.getItem('units')) {
-      localStorage.setItem('units', 'metric')
       this.$store.dispatch('updateUnits', 'metric').then(() => {
         this.units = this.$store.getters.units
         this.disabled = false
