@@ -3,7 +3,6 @@
     <div class="container">
       <section>
         <div class="search-bar">
-          <img class="logo" src="@/assets/logo-black.png">
           <Search class="icon"></Search>
           <input @keyup.enter="search()" v-model="query" placeholder="Search for a city..." :disabled="disabled">
           <button class="current-location" @click="promptUserLocation" :disabled="disabled">
@@ -13,7 +12,9 @@
       </section>
       <section>
         <div class="date">{{ currentDate }}</div>
-        <Cog></Cog>
+        <button>
+          <Cog></Cog>
+        </button>
       </section>
     </div>
   </header>
@@ -85,10 +86,6 @@ header {
     justify-content: space-between;
   }
 }
-.logo {
-  height: 48px;
-  margin-right: 1rem;
-}
 .search-bar {
   display: flex;
   align-items: center;
@@ -96,6 +93,7 @@ header {
     border-bottom: 1px solid black;
     padding: 6px;
     margin-right: -36px;
+    height: 24px;
   }
   input {
     background: transparent;
@@ -103,16 +101,6 @@ header {
     border-bottom: 1px solid black;
     width: 300px;
     padding-left: 36px;
-  }
-  .current-location {
-    background: transparent;
-    border: 2px solid black;
-    border-radius: 0.25rem;
-    margin-left: 0.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0.25rem 0.5rem;
   }
 }
 section:last-child {
@@ -124,4 +112,17 @@ section:last-child {
     margin-right: 2rem;
   }
 }
+  button {
+    background: transparent;
+    border: none;
+    border-radius: 0.25rem;
+    margin-left: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.25rem 0.5rem;
+    svg {
+      height: 32px;
+    }
+  }
 </style>
