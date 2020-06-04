@@ -6,7 +6,7 @@
           <img class="logo" src="@/assets/logo-black.png">
           <Search class="icon"></Search>
           <input @keyup.enter="search()" v-model="query" placeholder="Search for a city..." :disabled="disabled">
-          <button class="current-location" @click="promptUserLocation">
+          <button class="current-location" @click="promptUserLocation" :disabled="disabled">
             <LocationMarker></LocationMarker>
           </button>
         </div>
@@ -57,13 +57,20 @@ export default class Header extends Vue {
   }
 
   promptUserLocation () {
-    navigator.geolocation.getCurrentPosition(this.getCurrentLocationWeather)
+    this.disabled = true
+    navigator.geolocation.getCurrentPosition(this.getCurrentLocationWeather, () => {
+      this.disabled = false
+    })
   }
 
   getCurrentLocationWeather (position: any) {
     const lat = position.coords.latitude
     const lon = position.coords.longitude
-    this.$store.dispatch('getCurrentLocationWeather', { lat, lon })
+    this.$store.dispatch('getCurrentLocationWeather', { lat, lon }).then(() => {
+      this.disabled = false
+    }, () => {
+      this.disabled = false
+    })
   }
 }
 </script>
@@ -99,8 +106,13 @@ header {
   }
   .current-location {
     background: transparent;
-    border: none;
-    border-bottom: 1px solid black;
+    border: 2px solid black;
+    border-radius: 0.25rem;
+    margin-left: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.25rem 0.5rem;
   }
 }
 section:last-child {
