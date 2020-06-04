@@ -12,10 +12,3 @@ import Component from 'vue-class-component'
 @Component
 export default class extends Vue {}
 </script>
-
-<style lang="scss" scoped>
-svg {
-    height: 32px;
-    cursor: pointer;
-}
-</style>
