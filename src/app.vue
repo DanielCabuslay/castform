@@ -53,15 +53,19 @@ html {
   background: $skygradient;
   background-repeat: no-repeat;
   height: 100vh;
-  font-family: $fontfamily;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+html, input, button {
+  font-family: $fontfamily;
+}
+button {
+  cursor: pointer;
 }
 body {
   margin: 0;
 }
 input {
-  font-family: $fontfamily;
   font-size: 1em;
   padding: 0.5rem;
 }
