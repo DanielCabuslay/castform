@@ -1,5 +1,5 @@
 <template>
-  <div class="current-forecast">
+  <div id="current-forecast">
     <section>
       <div class="city">
         {{ city }}
@@ -9,9 +9,7 @@
       </div>
     </section>
     <section>
-      <div class="icon">
-        <WIDayCloudyGusts></WIDayCloudyGusts>
-      </div>
+      <WeatherIconViewer class="icon" v-bind:id="weatherId"/>
       <div class="temp">
         {{ currentTemp }}&deg;C
       </div>
@@ -34,14 +32,14 @@
 <script lang="ts">
 import Vue from 'vue'
 import Component from 'vue-class-component'
-import { ArrowNarrowUp, ArrowNarrowDown } from '@/components/heroicons'
-import { WIDayCloudyGusts } from '@/components/weather-icons'
+import { ArrowNarrowUp, ArrowNarrowDown } from './heroicons'
+import WeatherIconViewer from './WeatherIconViewer.vue'
 
 @Component({
   components: {
     ArrowNarrowUp,
     ArrowNarrowDown,
-    WIDayCloudyGusts
+    WeatherIconViewer
   }
 })
 export default class CurrentWeather extends Vue {
@@ -138,15 +136,24 @@ export default class CurrentWeather extends Vue {
       return 'N'
     }
   }
+
+  get weatherId () {
+    if (this.$store.getters.currentWeather) {
+      return this.$store.getters.currentWeather.weather[0].id
+    }
+    return 0
+  }
 }
 </script>
 
 <style scoped lang="scss">
+@import '@/styles/variables';
+
 section {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: auto;
 }
 section:first-child {
   text-align: center;
@@ -158,6 +165,9 @@ section:nth-child(2) {
 section:last-child {
   margin-top: 1rem;
 }
+.city, .description {
+  font-weight: 500;
+}
 .city {
   font-size: 2em;
 }
@@ -165,15 +175,10 @@ section:last-child {
   font-size: 1.5em;
   margin-top: 0.5rem;
 }
-.icon {
-  svg {
-    height: 11em;
-  }
-}
 .temp {
   font-size: 11em;
   margin-left: 2rem;
-  text-shadow: 0px 2px 2px rgba(0, 0, 0, 0.25);
+  text-shadow: $shadow;
 }
 .high-low {
   font-size: 1.5em;
@@ -196,5 +201,15 @@ section:last-child {
 }
 .wind {
   margin-left: 3rem;
+}
+</style>
+
+<style lang="scss">
+@import '@/styles/variables';
+#current-forecast .icon {
+  svg {
+    height: 11em;
+    filter: drop-shadow($shadow);
+  }
 }
 </style>
