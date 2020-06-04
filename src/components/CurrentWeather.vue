@@ -99,7 +99,7 @@ export default class CurrentWeather extends Vue {
 
   get description () {
     if (this.$store.getters.currentWeather) {
-      return this.$store.getters.currentWeather.weather[0].main
+      return this.$store.getters.currentWeather.weather[0].description
     }
   }
 
@@ -225,6 +225,7 @@ section:last-child {
 }
 .description {
   font-size: 1.5em;
+  text-transform: capitalize;
 }
 .temp {
   font-size: 11em;
