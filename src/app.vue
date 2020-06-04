@@ -32,22 +32,22 @@ export default class App extends Vue {
 @import 'styles/variables.scss';
 
 @font-face {
-  font-family: 'DM Sans';
+  font-family: 'Quicksand';
+  font-weight: 300;
+  font-display: swap;
+  src: url('assets/fonts/Quicksand-Light.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Quicksand';
   font-weight: 400;
   font-display: swap;
-  src: url('assets/fonts/DMSans-Regular.ttf') format('truetype');
+  src: url('assets/fonts/Quicksand-Regular.ttf') format('truetype');
 }
 @font-face {
-  font-family: 'DM Sans';
+  font-family: 'Quicksand';
   font-weight: 500;
   font-display: swap;
-  src: url('assets/fonts/DMSans-Medium.ttf') format('truetype');
-}
-@font-face {
-  font-family: 'DM Sans';
-  font-weight: 700;
-  font-display: swap;
-  src: url('assets/fonts/DMSans-Bold.ttf') format('truetype');
+  src: url('assets/fonts/Quicksand-Medium.ttf') format('truetype');
 }
 html {
   background: $skygradient;
