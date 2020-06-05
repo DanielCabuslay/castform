@@ -1,41 +1,51 @@
 <template>
-  <div id="current-forecast">
-    <section>
-      <div class="description">
-        {{ description }}
-      </div>
-    </section>
-    <section>
-      <WeatherIconViewer class="icon" :id="weatherId"/>
-      <div class="temp">
-        {{ currentTemp }}&deg;{{ temperatureUnits }}
-      </div>
-    </section>
-    <section>
-      <div class="feels-like">Feels like {{ feelsLike }}&deg;{{ temperatureUnits }}</div>
-      <div class="wind">{{ windSpeed }} {{ speedUnits }} {{ windDirection }}</div>
-    </section>
+  <div id="hourly-forecast">
+    <div v-for="hour of hourlyForecast" :key="hour.dt">
+      <div class="time">{{ getTime(hour.dt) }}</div>
+      <WeatherIconViewer class="icon" :id="hour.weather[0].id"/>
+      <div class="temp">{{ getTemp(hour.temp) }}&deg;{{ temperatureUnits }}</div>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
+/* eslint-disable vue/require-v-for-key */
 import Vue from 'vue'
 import Component from 'vue-class-component'
+import { ArrowNarrowUp, ArrowNarrowDown } from './heroicons'
 import WeatherIconViewer from './WeatherIconViewer.vue'
 
 @Component({
   components: {
+    ArrowNarrowUp,
+    ArrowNarrowDown,
     WeatherIconViewer
   }
 })
-export default class CurrentWeather extends Vue {
-  get currentTemp () {
-    if (this.$store.getters.currentWeather) {
-      if (this.$store.getters.units === 'imperial') {
-        return Math.round((this.$store.getters.currentWeather.temp * 1.8) + 32)
-      }
-      return Math.round(this.$store.getters.currentWeather.temp)
+export default class HourlyForecast extends Vue {
+  get hourlyForecast () {
+    if (this.$store.getters.hourlyForecast) {
+      return this.$store.getters.hourlyForecast
     }
+  }
+
+  getTime (dt: number) {
+    const showAmPm = this.$store.getters.showAmPm === '12h'
+    const timeOptions = {
+      hour12: showAmPm
+    }
+    const timeStr = new Date(dt * 1000).toLocaleTimeString('en-CA', timeOptions)
+    if (showAmPm) {
+      return timeStr.split(':')[0] + ' ' + timeStr.split(' ')[1]
+    }
+    return timeStr.split(':')[0] + ':' + timeStr.split(':')[1]
+  }
+
+  getTemp (temp: number) {
+    if (this.$store.getters.units === 'imperial') {
+      return Math.round((temp * 1.8) + 32)
+    }
+    return Math.round(temp)
   }
 
   get feelsLike () {
@@ -138,74 +148,63 @@ export default class CurrentWeather extends Vue {
 <style scoped lang="scss">
 @import '@/styles/variables';
 
-section {
+#hourly-forecast {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: auto;
-}
-section:first-child {
-  text-align: center;
-  flex-direction: column;
-}
-section:nth-child(2) {
-  align-items: flex-end;
-}
-section:last-child {
-  margin-top: 1rem;
-  div {
-    margin: 0 1rem;
+  overflow-x: scroll;
+  margin-top: 3rem;
+  // scrollbar-color: rgba(0, 0, 0, 0.5) transparent;
+  scrollbar-width: none;
+  // background-color: $darkbluefaded;
+  padding: 1rem 0rem;
+  border-radius: 30px;
+  & > div {
+    padding: 0.5rem 1.5rem;
+    text-align: center;
+    .time, .temp {
+      font-weight: 500;
+    }
+    .time {
+      margin-bottom: 0.5rem;
+    }
+    .temp {
+      font-size: 1.1em;
+    }
+  }
+  &::-webkit-scrollbar {
+    // height: 0px;
+    // width: 0px;
+    display: none;
   }
 }
-.description {
-  font-size: 2em;
-  font-weight: 500;
-  text-transform: capitalize;
-}
-.temp {
-  font-size: 11em;
-  text-shadow: $shadow;
-}
-.icon, .temp {
-  margin: 0 1rem;
-}
 @media (max-width: 768px) {
+  #hourly-forecast {
+    & > div {
+      padding: 0 0.25rem;
+    }
+  }
   .icon, .temp {
     margin: 0 0.5rem;
   }
-  .temp {
-    font-size: 7em;
-  }
 }
-@media (max-width: 400px) {
-  .description {
-    font-size: 1.25em;
-  }
-  .temp {
-    font-size: 5em;
+@media (max-width: 425px) {
+  #hourly-forecast {
+    margin-top: 2rem;
   }
 }
 </style>
 
 <style lang="scss">
 @import '@/styles/variables';
-#current-forecast .icon {
+#hourly-forecast .icon {
   svg {
-    height: 11em;
+    height: 4em;
     filter: drop-shadow($shadow);
   }
 }
 @media (max-width: 768px) {
-  #current-forecast .icon {
+  #hourly-forecast .icon {
     svg {
-      height: 7em;
-    }
-  }
-}
-@media (max-width: 400px) {
-  #current-forecast .icon {
-    svg {
-      height: 5em;
+      height: 3em;
     }
   }
 }

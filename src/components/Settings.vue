@@ -1,13 +1,20 @@
 <template>
   <div id="settings" v-if="this.$store.getters.showSettings">
-    <div class="modal">
+    <div class="modal" tabindex="-1">
       <h1>Settings</h1>
       <!-- <hr> -->
       <div class="row">
-        <div>Unit</div>
+        <div>Measurement Units</div>
         <select v-model="units" @change="unitChange()" :disabled="disabled">
-          <option value="metric" selected>Metric (&deg;C, km/h)</option>
-          <option value="imperial">Imperial (&deg;F, mph)</option>
+          <option value="metric">Metric</option>
+          <option value="imperial">Imperial</option>
+        </select>
+      </div>
+      <div class="row">
+        <div>Time Format</div>
+        <select v-model="timeFormat" @change="timeFormatChange()" :disabled="disabled">
+          <option value="12h">12-hour</option>
+          <option value="24h">24-hour</option>
         </select>
       </div>
       <!-- <hr> -->
@@ -25,6 +32,7 @@ import Component from 'vue-class-component'
 @Component
 export default class Settings extends Vue {
   units = null
+  timeFormat = null
   disabled = false
 
   beforeCreate () {
@@ -34,10 +42,17 @@ export default class Settings extends Vue {
         this.disabled = false
       })
     }
+    if (!localStorage.getItem('showAmPm')) {
+      this.$store.dispatch('updateShowAmPm', '12h').then(() => {
+        this.timeFormat = this.$store.getters.showAmPm
+        this.disabled = false
+      })
+    }
   }
 
   mounted () {
     this.units = this.$store.getters.units
+    this.timeFormat = this.timeFormat = this.$store.getters.showAmPm
   }
 
   unitChange () {
@@ -48,8 +63,16 @@ export default class Settings extends Vue {
     })
   }
 
+  timeFormatChange () {
+    this.disabled = true
+    this.$store.dispatch('updateShowAmPm', this.timeFormat).then(() => {
+      this.timeFormat = this.$store.getters.showAmPm
+      this.disabled = false
+    })
+  }
+
   closeSettings () {
-    this.$store.commit('changeSettingsState')
+    this.$store.commit('changeSettingsState', false)
   }
 }
 </script>

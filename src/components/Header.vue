@@ -2,17 +2,19 @@
   <header>
     <div class="container">
       <section>
-        <div class="search-bar">
+        <!-- <div class="search-bar">
           <Search class="icon"></Search>
           <input @keyup.enter="search()" v-model="query" placeholder="Search for a city..." :disabled="disabled">
           <button class="current-location" @click="promptUserLocation" :disabled="disabled">
             <LocationMarker></LocationMarker>
           </button>
-        </div>
+        </div> -->
+        <div class="date">{{ date }}</div>
       </section>
       <section>
         <button @click="openSettings()">
           <Cog></Cog>
+          <span>Settings</span>
         </button>
       </section>
     </div>
@@ -44,11 +46,12 @@ export default class Header extends Vue {
     }, () => {
       this.disabled = false
     })
+    // this.$store.dispatch('getHourlyForecast', this.query)
   }
 
   promptUserLocation () {
     this.disabled = true
-    navigator.geolocation.getCurrentPosition(this.getCurrentLocationWeather, () => {
+    navigator.geolocation.getCurrentPosition(this.getCurrentLocationWeatherOneCall, () => {
       this.disabled = false
     })
   }
@@ -74,7 +77,25 @@ export default class Header extends Vue {
   }
 
   openSettings () {
-    this.$store.commit('changeSettingsState')
+    this.$store.commit('changeSettingsState', true)
+  }
+
+  get date () {
+    const dateOptions = {
+      weekday: 'short',
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      timeZone: 'UTC'
+    }
+    if (this.$store.getters.currentWeather) {
+      if (this.$store.getters.timezone) {
+        dateOptions.timeZone = this.$store.getters.timezone
+      }
+      return new Date(this.$store.getters.currentWeather.dt * 1000).toLocaleDateString('en-CA', dateOptions)
+    } else {
+      return new Date(Date.now()).toLocaleDateString('en-CA', dateOptions)
+    }
   }
 }
 </script>
@@ -90,6 +111,11 @@ header {
     align-items: center;
     justify-content: space-between;
   }
+}
+.date {
+  font-size: 1.25em;
+  font-weight: 500;
+  margin: 0 0.75rem;
 }
 .search-bar {
   display: flex;
@@ -108,27 +134,25 @@ section:last-child {
   display: flex;
   align-items: center;
   justify-content: end;
-  .date {
-    font-size: 1.1em;
-    margin-right: 2rem;
-  }
 }
 button {
-  background: transparent;
   border: none;
-  border-radius: 0.25rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.25rem 0.5rem;
   svg {
     height: 32px;
+  }
+  span {
+    margin: 0 0.25rem;
   }
 }
 @media (max-width: 425px) {
   .search-bar {
     input {
       width: 150px;
+    }
+  }
+  button {
+    span {
+      display: none;
     }
   }
 }

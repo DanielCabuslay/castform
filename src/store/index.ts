@@ -7,13 +7,24 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     currentWeather: null,
+    hourlyForecast: null,
+    dailyForecast: null,
+    timezone: null,
     defaultCityId: localStorage.getItem('defaultCityId'),
     units: localStorage.getItem('units'),
-    showSettings: false
+    showAmPm: localStorage.getItem('showAmPm'),
+    showSettings: false,
+    locationAccess: localStorage.getItem('locationAccess')
   },
   mutations: {
     updateCurrentWeather (state, weather) {
       state.currentWeather = weather
+    },
+    updateHourlyForecast (state, forecast) {
+      state.hourlyForecast = forecast
+    },
+    updateDailyForecast (state, forecast) {
+      state.dailyForecast = forecast
     },
     updateDefaultCityId (state) {
       state.defaultCityId = localStorage.getItem('defaultCityId')
@@ -21,13 +32,28 @@ export default new Vuex.Store({
     updateUnits (state) {
       state.units = localStorage.getItem('units')
     },
-    changeSettingsState (state) {
-      state.showSettings = !state.showSettings
+    updateShowAmPm (state) {
+      state.showAmPm = localStorage.getItem('showAmPm')
+    },
+    changeSettingsState (state, isOpen) {
+      state.showSettings = isOpen
+    },
+    updateLocationAccess (state) {
+      state.locationAccess = localStorage.getItem('locationAccess')
+    },
+    updateTimezone (state, timezone) {
+      state.timezone = timezone
     }
   },
   getters: {
     currentWeather: (state) => {
       return state.currentWeather
+    },
+    hourlyForecast: (state) => {
+      return state.hourlyForecast
+    },
+    dailyForecast: (state) => {
+      return state.dailyForecast
     },
     defaultCityId: (state) => {
       return state.defaultCityId
@@ -35,8 +61,17 @@ export default new Vuex.Store({
     units: (state) => {
       return state.units
     },
+    showAmPm: (state) => {
+      return state.showAmPm
+    },
     showSettings: (state) => {
       return state.showSettings
+    },
+    locationAccess: (state) => {
+      return state.locationAccess
+    },
+    timezone: state => {
+      return state.timezone
     }
   },
   actions: {
@@ -83,7 +118,10 @@ export default new Vuex.Store({
       return new Promise((resolve, reject) => {
         const weatherService = new WeatherService()
         weatherService.getCurrentLocationWeatherOneCall(lat, lon).then((response: any) => {
-          // context.commit('updateCurrentWeather', response.body)
+          context.commit('updateCurrentWeather', response.body.current)
+          context.commit('updateHourlyForecast', response.body.hourly)
+          context.commit('updateDailyForecast', response.body.daily)
+          context.commit('updateTimezone', response.body.timezone)
           console.log(response.body)
           resolve()
         }, (error) => {
@@ -103,6 +141,20 @@ export default new Vuex.Store({
       return new Promise((resolve) => {
         localStorage.setItem('units', unit)
         context.commit('updateUnits')
+        resolve()
+      })
+    },
+    async updateShowAmPm (context, format) {
+      return new Promise((resolve) => {
+        localStorage.setItem('showAmPm', format)
+        context.commit('updateShowAmPm')
+        resolve()
+      })
+    },
+    async updateLocationAccess (context) {
+      return new Promise((resolve) => {
+        localStorage.setItem('locationAccess', 'true')
+        context.commit('updateLocationAccess')
         resolve()
       })
     }

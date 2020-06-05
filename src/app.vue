@@ -21,20 +21,12 @@ import Settings from './components/Settings.vue'
   }
 })
 export default class App extends Vue {
-  defaultCityId = null
-
-  beforeCreate () {
-    if (!localStorage.getItem('defaultCityId')) {
-      this.$store.dispatch('updateDefaultCityId', '6167865').then(() => {
-        this.defaultCityId = this.$store.getters.defaultCityId
-        this.$store.dispatch('updateCurrentWeatherById', this.defaultCityId)
-      })
-    } else {
-      if (this.$store.getters.defaultCityId) {
-        this.defaultCityId = this.$store.getters.defaultCityId
-        this.$store.dispatch('updateCurrentWeatherById', this.defaultCityId)
+  mounted () {
+    window.addEventListener('keydown', (event) => {
+      if (event.keyCode === 27 && this.$store.getters.showSettings) {
+        this.$store.commit('changeSettingsState', false)
       }
-    }
+    })
   }
 }
 </script>
@@ -76,6 +68,15 @@ html, input, button, select {
 }
 button {
   cursor: pointer;
+  font-size: 1.25em;
+  font-weight: 500;
+  border: 1px solid black;
+  border-radius: 0.25rem;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 0.75rem;
 }
 body {
   margin: 0;
