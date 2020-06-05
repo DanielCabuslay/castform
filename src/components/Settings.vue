@@ -7,7 +7,7 @@
         <div>Unit</div>
         <select v-model="units" @change="unitChange()" :disabled="disabled">
           <option value="metric" selected>Metric (&deg;C, km/h)</option>
-          <option value="imperial">Fahrenheit (&deg;F, mph)</option>
+          <option value="imperial">Imperial (&deg;F, mph)</option>
         </select>
       </div>
       <!-- <hr> -->
