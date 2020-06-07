@@ -175,7 +175,7 @@ export default class HourlyForecast extends Vue {
 @media (max-width: 768px) {
   #hourly-forecast {
     & > div {
-      padding: 0 0.25rem;
+      padding: 0 0.75rem;
     }
   }
   .icon, .temp {
@@ -185,6 +185,9 @@ export default class HourlyForecast extends Vue {
 @media (max-width: 425px) {
   #hourly-forecast {
     margin-top: 2rem;
+    & > div {
+      padding: 0 0.25rem;
+    }
   }
 }
 </style>
