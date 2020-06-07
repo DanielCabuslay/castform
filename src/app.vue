@@ -21,7 +21,7 @@ import Settings from './components/Settings.vue'
   }
 })
 export default class App extends Vue {
-  mounted () {
+  created () {
     window.addEventListener('keydown', (event) => {
       if (event.keyCode === 27 && this.$store.getters.showSettings) {
         this.$store.commit('changeSettingsState', false)
