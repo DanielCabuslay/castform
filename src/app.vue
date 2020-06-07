@@ -59,6 +59,7 @@ html {
   background: $skygradient;
   background-repeat: no-repeat;
   background-position: top;
+  min-height: 100vh;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
