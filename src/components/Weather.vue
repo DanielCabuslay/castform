@@ -63,13 +63,16 @@ export default class Weather extends Vue {
 </script>
 
 <style scoped lang="scss">
+@import '@/styles/variables';
 .container {
   margin-top: 4rem;
 }
 .prompt {
-  margin: auto;
+  margin: auto 1rem;
   text-align: center;
   button {
+    background: $brown;
+    color: $tan;
     margin: auto;
   }
 }

@@ -31,7 +31,10 @@ export default class App extends Vue {
   }
 
   get currentWeather () {
-    return this.$store.getters.isDaytime ? 'clear' : 'nighttime'
+    if (this.$store.getters.locationAccess) {
+      return this.$store.getters.isDaytime && this.$store.getters.locationAccess ? 'clear' : 'nighttime'
+    }
+    return ''
   }
 }
 </script>
@@ -57,12 +60,16 @@ export default class App extends Vue {
   font-display: swap;
   src: url('assets/fonts/Quicksand-SemiBold.ttf') format('truetype');
 }
+#app {
+}
 h1 {
   font-weight: 600;
 }
 html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background: $tan;
+  color: $brown;
 }
 html, input, button, select {
   font-family: $fontfamily;
@@ -71,7 +78,8 @@ button {
   cursor: pointer;
   font-size: 1.25em;
   font-weight: 500;
-  border: 1px solid black;
+  border: 1px solid $brown;
+  color: $brown;
   border-radius: 0.25rem;
   background: transparent;
   display: flex;
@@ -117,6 +125,9 @@ input {
   #background {
     background: $skygradient;
   }
+  button {
+    border-color: $black;
+  }
 }
 .nighttime {
   *:not(path) {
@@ -125,6 +136,9 @@ input {
   }
   #background {
     background: $nightgradient;
+  }
+  button {
+    border-color: $white;
   }
 }
 @media (max-width: 1024px) {

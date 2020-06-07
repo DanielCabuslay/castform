@@ -12,7 +12,7 @@
         <div class="date">{{ date }}</div>
       </section>
       <section>
-        <button @click="openSettings()">
+        <button @click="openSettings()" v-if="locationAccess">
           <Cog></Cog>
           <span>Settings</span>
         </button>
@@ -94,6 +94,12 @@ export default class Header extends Vue {
       return new Date(this.$store.getters.currentWeather.dt * 1000).toLocaleDateString('en-CA', dateOptions)
     } else {
       return new Date(Date.now()).toLocaleDateString('en-CA', dateOptions)
+    }
+  }
+
+  get locationAccess () {
+    if (this.$store.getters.locationAccess) {
+      return this.$store.getters.locationAccess
     }
   }
 }
