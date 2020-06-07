@@ -1,4 +1,9 @@
 module.exports = {
+  pages: {
+    index: {
+      title: 'Castform'
+    }
+  },
   pwa: {
     name: 'Castform',
     themeColor: '#2680D9',
