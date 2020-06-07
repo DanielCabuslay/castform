@@ -1,9 +1,22 @@
 <template>
-  <div id="hourly-forecast">
-    <div v-for="hour of hourlyForecast" :key="hour.dt">
-      <div class="time">{{ getTime(hour.dt) }}</div>
-      <WeatherIconViewer class="icon" :id="hour.weather[0].id"/>
-      <div class="temp">{{ getTemp(hour.temp) }}&deg;{{ temperatureUnits }}</div>
+  <div id="daily-forecast">
+    <div v-for="day of dailyForecast" :key="day.dt">
+      <div>
+        <div>
+          <div class="day">{{ getDate(day.dt) }}</div>
+          <div class="description">{{ day.weather[0].description }}</div>
+        </div>
+        <div class="temp">
+          <WeatherIconViewer class="icon" :id="day.weather[0].id"/>
+          <div>
+            <div class="temp_high">{{ getTemp(day.temp.max) }}&deg;{{ temperatureUnits }}</div>
+            <div class="temp_low">{{ getTemp(day.temp.min) }}&deg;{{ temperatureUnits }}</div>
+          </div>
+        </div>
+      </div>
+      <div>
+        second row
+      </div>
     </div>
   </div>
 </template>
@@ -18,23 +31,20 @@ import WeatherIconViewer from './WeatherIconViewer.vue'
     WeatherIconViewer
   }
 })
-export default class HourlyForecast extends Vue {
-  get hourlyForecast () {
-    if (this.$store.getters.hourlyForecast) {
-      return this.$store.getters.hourlyForecast
+export default class DailyForecast extends Vue {
+  get dailyForecast () {
+    if (this.$store.getters.dailyForecast) {
+      return this.$store.getters.dailyForecast
     }
   }
 
-  getTime (dt: number) {
-    const showAmPm = this.$store.getters.showAmPm === '12h'
-    const timeOptions = {
-      hour12: showAmPm
+  getDate (dt: number) {
+    const dateOptions = {
+      month: 'short',
+      day: 'numeric',
+      timeZone: 'UTC'
     }
-    const timeStr = new Date(dt * 1000).toLocaleTimeString('en-CA', timeOptions)
-    if (showAmPm) {
-      return timeStr.split(':')[0] + ' ' + timeStr.split(' ')[1]
-    }
-    return timeStr.split(':')[0] + ':' + timeStr.split(':')[1]
+    return new Date(dt * 1000).toLocaleDateString('en-CA', dateOptions)
   }
 
   getTemp (temp: number) {
@@ -59,12 +69,6 @@ export default class HourlyForecast extends Vue {
         return Math.round(this.$store.getters.currentWeather.wind_speed / 1.609344)
       }
       return Math.round(this.$store.getters.currentWeather.wind_speed)
-    }
-  }
-
-  get description () {
-    if (this.$store.getters.currentWeather) {
-      return this.$store.getters.currentWeather.weather[0].description
     }
   }
 
@@ -144,61 +148,66 @@ export default class HourlyForecast extends Vue {
 <style scoped lang="scss">
 @import '@/styles/variables';
 
-#hourly-forecast {
-  display: flex;
-  overflow-x: scroll;
-  margin-top: 3rem;
-  // scrollbar-color: rgba(0, 0, 0, 0.5) transparent;
-  scrollbar-width: none;
-  background-color: $darkbluefaded;
+#daily-forecast {
+//   display: flex;
+//   overflow-x: scroll;
+  max-width: 450px;
+  margin: 1rem auto 0;
   padding: 1rem 0rem;
-  border-radius: 30px;
   & > div {
-    padding: 0.5rem 1.5rem;
-    text-align: center;
-    .time, .temp {
+    background-color: $darkbluefaded;
+    padding: 0.5rem 1rem;
+    margin: 0.5rem;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    .day, .temp_high, .temp_low {
       font-weight: 500;
     }
-    .time {
-      margin-bottom: 0.5rem;
+    .description {
+      text-transform: capitalize;
     }
-    .temp {
-      font-size: 1.1em;
+    & > div:first-child {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      .temp {
+        display: flex;
+        align-items: center;
+        & > div {
+          margin-left: 0.5rem;
+        }
+      }
+      .temp_high, .temp_low {
+        font-size: 1.1em;
+      }
     }
-  }
-  &::-webkit-scrollbar {
-    // height: 40px;
-    // width: 0px;
-    // display: none;
+    & > div:last-child {
+      display: none;
+    }
   }
 }
 @media (max-width: 768px) {
-  #hourly-forecast {
+  #daily-forecast {
     & > div {
-      padding: 0 0.25rem;
+      margin: 0.5rem 0;
     }
   }
   .icon, .temp {
     margin: 0 0.5rem;
   }
 }
-@media (max-width: 425px) {
-  #hourly-forecast {
-    margin-top: 2rem;
-  }
-}
 </style>
 
 <style lang="scss">
 @import '@/styles/variables';
-#hourly-forecast .icon {
+#daily-forecast .icon {
   svg {
     height: 4em;
     filter: drop-shadow($shadow);
   }
 }
 @media (max-width: 768px) {
-  #hourly-forecast .icon {
+  #daily-forecast .icon {
     svg {
       height: 3em;
     }

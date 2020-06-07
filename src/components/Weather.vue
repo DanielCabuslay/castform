@@ -3,6 +3,7 @@
     <div v-if="locationAccess">
       <CurrentWeather/>
       <HourlyForecast/>
+      <DailyForecast/>
     </div>
     <div class="prompt" v-else>
       <h1>Location Access Required</h1>
@@ -17,11 +18,13 @@ import Vue from 'vue'
 import Component from 'vue-class-component'
 import CurrentWeather from './CurrentWeather.vue'
 import HourlyForecast from './HourlyForecast.vue'
+import DailyForecast from './DailyForecast.vue'
 
 @Component({
   components: {
     CurrentWeather,
-    HourlyForecast
+    HourlyForecast,
+    DailyForecast
   }
 })
 export default class Weather extends Vue {
