@@ -82,9 +82,8 @@ export default class Header extends Vue {
 
   get date () {
     const dateOptions = {
-      weekday: 'short',
       year: 'numeric',
-      month: 'short',
+      month: 'long',
       day: 'numeric',
       timeZone: 'UTC'
     }
