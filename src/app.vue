@@ -1,5 +1,6 @@
 <template>
-  <main id="app">
+  <main id="app" :class="currentWeather">
+    <div id="background"></div>
     <Settings/>
     <Header/>
     <Weather/>
@@ -27,6 +28,10 @@ export default class App extends Vue {
         this.$store.commit('changeSettingsState', false)
       }
     })
+  }
+
+  get currentWeather () {
+    return this.$store.getters.isDaytime ? 'clear' : 'nighttime'
   }
 }
 </script>
@@ -56,10 +61,6 @@ h1 {
   font-weight: 600;
 }
 html {
-  background: $skygradient;
-  background-repeat: no-repeat;
-  background-position: top;
-  min-height: 100vh;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -98,6 +99,33 @@ input {
 .container {
   width: 1024px;
   margin: auto;
+}
+#background {
+  height: 100vh;
+  width: 100vw;
+  background-repeat: no-repeat;
+  background-position: top;
+  position: fixed;
+  z-index: -1;
+  left: 0;
+}
+.clear {
+  *:not(path) {
+    color: $black;
+    fill: $black;
+  }
+  #background {
+    background: $skygradient;
+  }
+}
+.nighttime {
+  *:not(path) {
+    color: $white;
+    fill: $white;
+  }
+  #background {
+    background: $nightgradient;
+  }
 }
 @media (max-width: 1024px) {
   .container {

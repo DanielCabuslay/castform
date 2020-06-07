@@ -89,11 +89,13 @@ export default class Settings extends Vue {
   display: flex;
   align-items: center;
   justify-content: center;
+  svg {
+    fill: transparent!important;
+  }
 }
 .modal {
   width: 300px;
   padding: 0 1rem 1rem;
-  background: white;
   border-radius: 0.25rem;
   box-shadow: $shadow;
 }
@@ -105,23 +107,71 @@ h1 {
   align-items: center;
   justify-content: space-between;
   margin: 2rem 0;
-  font-weight: 500;
+  font-weight: 600;
+  font-size: 1.1em;
   &:last-of-type {
       margin: 1rem 0 0;
       justify-content: flex-end;
   }
 }
 select {
-  padding: 0.25rem;
-  font-weight: 500;
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+  font-weight: 600;
+  border: none;
+  font-size: 1em;
 }
 button {
   background: transparent;
   font-size: 1em;
   padding: 0.25rem 0.5rem;
   border-radius: 0.25rem;
-  color: $accent;
+  // color: $accent;
   font-size: 1em;
-  border: 1px solid $accent;
+  // border: 1px solid $accent;
+}
+.clear {
+  #settings {
+    .modal {
+      background: $tan;
+      h1 {
+        color: $brown;
+      }
+      .row {
+        div {
+          color: $brown;
+        }
+        select {
+          background: $darken;
+        }
+      }
+      button {
+        color: $brown;
+        border-color: $brown;
+      }
+    }
+  }
+}
+.nighttime {
+  #settings {
+    .modal {
+      background: $darkblue;
+      h1 {
+        color: $lightblue;
+      }
+      .row {
+        div {
+          color: $lightblue;
+        }
+        select {
+          background: $blackfaint;
+        }
+      }
+      button {
+        color: $lightblue;
+        border-color: $lightblue;
+      }
+    }
+  }
 }
 </style>

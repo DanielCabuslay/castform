@@ -138,6 +138,7 @@ button {
   border: none;
   svg {
     height: 32px;
+    fill: transparent;
   }
   span {
     margin: 0 0.25rem;

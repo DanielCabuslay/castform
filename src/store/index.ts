@@ -10,15 +10,17 @@ export default new Vuex.Store({
     hourlyForecast: null,
     dailyForecast: null,
     timezone: null,
+    showSettings: false,
+    isDaytime: true,
     defaultCityId: localStorage.getItem('defaultCityId'),
     units: localStorage.getItem('units'),
     showAmPm: localStorage.getItem('showAmPm'),
-    showSettings: false,
     locationAccess: localStorage.getItem('locationAccess')
   },
   mutations: {
     updateCurrentWeather (state, weather) {
       state.currentWeather = weather
+      state.isDaytime = weather.dt >= weather.sunrise && weather.dt < weather.sunset
     },
     updateHourlyForecast (state, forecast) {
       state.hourlyForecast = forecast
@@ -48,6 +50,9 @@ export default new Vuex.Store({
     },
     updateTimezone (state, timezone) {
       state.timezone = timezone
+    },
+    updateIsDaytime (state, isDaytime) {
+      state.isDaytime = isDaytime
     }
   },
   getters: {
@@ -75,8 +80,11 @@ export default new Vuex.Store({
     locationAccess: (state) => {
       return state.locationAccess
     },
-    timezone: state => {
+    timezone: (state) => {
       return state.timezone
+    },
+    isDaytime: (state) => {
+      return state.isDaytime
     }
   },
   actions: {
