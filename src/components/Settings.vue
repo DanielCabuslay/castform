@@ -82,7 +82,7 @@ export default class Settings extends Vue {
 
 #settings {
   z-index: 1;
-  position: absolute;
+  position: fixed;
   height: 100vh;
   width: 100vw;
   background: $blacktranslucent;
