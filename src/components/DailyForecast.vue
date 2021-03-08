@@ -8,15 +8,15 @@
         </div>
         <div class="temp">
           <WeatherIconViewer class="icon" :id="day.weather[0].id"/>
-          <div>
+          <div class="num">
             <div class="temp_high">{{ getTemp(day.temp.max) }}&deg;{{ temperatureUnits }}</div>
             <div class="temp_low">{{ getTemp(day.temp.min) }}&deg;{{ temperatureUnits }}</div>
           </div>
         </div>
       </div>
-      <div>
+      <!-- <div>
         second row
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
@@ -176,14 +176,17 @@ export default class DailyForecast extends Vue {
         & > div {
           margin-left: 0.5rem;
         }
+        & > .num {
+          text-align: right;
+        }
       }
       .temp_high, .temp_low {
         font-size: 1.1em;
       }
     }
-    & > div:last-child {
-      display: none;
-    }
+    // & > div:last-child {
+    //   display: none;
+    // }
   }
 }
 @media (max-width: 768px) {
